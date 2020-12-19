@@ -1,0 +1,36 @@
+﻿<Page
+    x:Class="MTManga.UWP.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MTManga.UWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:brushes="using:Microsoft.Toolkit.Uwp.UI.Media"
+    xmlns:effects="using:Microsoft.Toolkit.Uwp.UI.Media.Effects"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Name="Root" Background="#282C34">
+        <!--<Grid.Background>
+            <ImageBrush ImageSource="ms-appx:///Assets/bg.jpg" Stretch="UniformToFill"></ImageBrush>
+        </Grid.Background>-->
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Image Grid.RowSpan="2" Source="ms-appx:///Assets/bg.jpg" Stretch="UniformToFill"/>
+
+        <Border Grid.RowSpan="2">
+            <Border.Background>
+                <brushes:AcrylicBrush BackgroundSource="Backdrop"
+                                TintColor="#282C34"
+                                TintOpacity="0.5"
+                                BlurAmount="20"/>
+            </Border.Background>
+        </Border>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 188 0" Padding="0">
+            <AppBarSeparator Foreground="#fff" VerticalAlignment="Center"></AppBarSeparator>
+        </StackPanel>
+    </Grid>   
+</Page>
