@@ -5,32 +5,57 @@
     xmlns:local="using:MTManga.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:brushes="using:Microsoft.Toolkit.Uwp.UI.Media"
     xmlns:effects="using:Microsoft.Toolkit.Uwp.UI.Media.Effects"
-    mc:Ignorable="d"
+    xmlns:mclib="using:MT.UWP.ControlLib"
+    mc:Ignorable="d"    
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Grid Name="Root" Background="#282C34">
-        <!--<Grid.Background>
-            <ImageBrush ImageSource="ms-appx:///Assets/bg.jpg" Stretch="UniformToFill"></ImageBrush>
-        </Grid.Background>-->
-
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light" Source="theme/Light.xaml"/>
+                <ResourceDictionary x:Key="Dark" Source="theme/Dark.xaml"/>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Image Grid.RowSpan="2" Source="ms-appx:///Assets/bg.jpg" Stretch="UniformToFill"/>
+        <mclib:AppTitleBar></mclib:AppTitleBar>
+        <Grid Grid.Row="1">
+            <Pivot ItemsSource="{Binding Menu}" >
+                <Pivot.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Header}" Foreground="{ThemeResource}"/>
+                    </DataTemplate>
+                </Pivot.HeaderTemplate>
+                <Pivot.ItemTemplate>
+                    <DataTemplate>
+                        <PivotItem>
+                            <ScrollViewer Content="{Binding Content}"/>
+                        </PivotItem>
+                    </DataTemplate>
+                </Pivot.ItemTemplate>
+            </Pivot>
+        </Grid>
+        <Grid Grid.Row="2">
+            <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
+                <AppBarButton Icon="Add" Label="Add"/>
+                <AppBarButton Icon="Edit" Label="Edit"/>
+                <AppBarButton Icon="Share" Label="Share"/>
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton Icon="Setting" Label="Settings">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="I" />
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+        </Grid>
+    </Grid>
 
-        <Border Grid.RowSpan="2">
-            <Border.Background>
-                <brushes:AcrylicBrush BackgroundSource="Backdrop"
-                                TintColor="#282C34"
-                                TintOpacity="0.5"
-                                BlurAmount="20"/>
-            </Border.Background>
-        </Border>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 188 0" Padding="0">
-            <AppBarSeparator Foreground="#fff" VerticalAlignment="Center"></AppBarSeparator>
-        </StackPanel>
-    </Grid>   
 </Page>

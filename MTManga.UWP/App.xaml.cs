@@ -73,42 +73,7 @@ namespace MTManga.UWP
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
-            }
-
-            var titleBar = CoreApplication.GetCurrentView().TitleBar;
-            //将视图扩展到状态栏
-            titleBar.ExtendViewIntoTitleBar = true;
-
-            //获取活动应用程序的视图状态和行为设置
-            var view = ApplicationView.GetForCurrentView();
-
-            //下面这两个是给当你不把状态栏隐藏时设置的
-
-            //active 当前被激活时
-            view.TitleBar.BackgroundColor = Colors.Red;
-            view.TitleBar.ForegroundColor = Colors.Black;
-
-            //inactive 不是当前窗口，我觉得不常用
-            view.TitleBar.InactiveBackgroundColor = Colors.Red;
-            view.TitleBar.InactiveForegroundColor = Colors.Black;
-
-            //button
-
-            //初始
-            view.TitleBar.ButtonBackgroundColor = Colors.Transparent;
-            view.TitleBar.ButtonForegroundColor = Colors.White;
-
-            //悬浮
-            view.TitleBar.ButtonHoverBackgroundColor = Colors.DarkGray;
-            view.TitleBar.ButtonHoverForegroundColor = Colors.White;
-
-            //按下
-            view.TitleBar.ButtonPressedBackgroundColor = Colors.DarkGray;
-            view.TitleBar.ButtonPressedForegroundColor = Colors.White;
-
-            //inactive 不是当前窗口，我觉得不常用
-            view.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            view.TitleBar.ButtonInactiveForegroundColor = Colors.White;
+            }           
         }
 
         /// <summary>
