@@ -25,12 +25,12 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <mclib:AppTitleBar></mclib:AppTitleBar>
+        <mclib:AppTitleBar HideInFullScreen="{Binding Source={StaticResource AppConfigInstance},Path=Config.IsHideTitleBarButtonInFullScreen}"></mclib:AppTitleBar>
         <Grid Grid.Row="1">
-            <Pivot ItemsSource="{Binding Menu}" >
+            <Pivot ItemsSource="{x:Bind Menu}" >
                 <Pivot.HeaderTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Header}" Foreground="{ThemeResource}"/>
+                        <TextBlock Text="{Binding Header}"/>
                     </DataTemplate>
                 </Pivot.HeaderTemplate>
                 <Pivot.ItemTemplate>

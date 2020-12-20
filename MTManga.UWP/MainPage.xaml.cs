@@ -1,6 +1,9 @@
-﻿using MTManga.UWP.Views;
+﻿using MT.UWP.Common;
+using MT.UWP.Common.Models;
+using MTManga.UWP.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;

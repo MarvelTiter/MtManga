@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.Helpers;
+using MT.UWP.Common;
+using MT.UWP.Common.Models;
+using MTManga.UWP.Enums;
+using MTManga.UWP.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +30,9 @@ namespace MTManga.UWP
     /// </summary>
     sealed partial class App : Application
     {
+        public static AppHelper AppHelper;
+        //public static AppConfig AppConfig;
+        
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
@@ -32,7 +40,9 @@ namespace MTManga.UWP
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += OnSuspending;            
+            this.Suspending += OnSuspending;
+            App.AppHelper = new AppHelper(new Option("App1"));
+            //AppConfig = AppHelper.Setting.GetSetting<AppConfig>(ConfigEnum.All);            
         }
 
         /// <summary>
@@ -43,7 +53,6 @@ namespace MTManga.UWP
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
-
             // 不要在窗口已包含内容时重复应用程序初始化，
             // 只需确保窗口处于活动状态
             if (rootFrame == null)
@@ -61,7 +70,7 @@ namespace MTManga.UWP
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;
             }
-
+            //BackgroundTaskHelper.Register()
             if (e.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
@@ -73,7 +82,7 @@ namespace MTManga.UWP
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
-            }           
+            }
         }
 
         /// <summary>

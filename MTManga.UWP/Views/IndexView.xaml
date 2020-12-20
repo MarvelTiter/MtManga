@@ -8,10 +8,11 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-
-    <Grid>
-        <TextBlock>
-            首页
-        </TextBlock>
-    </Grid>
+    <UserControl.DataContext>
+        <Binding Path="Main" Source="{StaticResource Locator}"/>
+    </UserControl.DataContext>
+    <StackPanel>
+        <TextBlock Text="{Binding Text}"></TextBlock>
+        <Button Command="{Binding UpdateCommand}">测试</Button>
+    </StackPanel>
 </UserControl>

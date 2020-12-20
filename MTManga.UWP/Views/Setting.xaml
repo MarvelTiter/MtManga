@@ -9,7 +9,12 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid>
+    <StackPanel>
         <TextBlock Text="设置"/>
-    </Grid>
+        <StackPanel Orientation="Horizontal">
+            <Button Click="Button_Click">保存</Button>
+            <Button Click="Button_Click_1">读取</Button>
+        </StackPanel>
+        <CheckBox>全屏时隐藏标题按钮</CheckBox>
+    </StackPanel>
 </UserControl>

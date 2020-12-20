@@ -68,7 +68,7 @@ namespace MT.UWP.ControlLib {
         private void OnLoaded(object sender, RoutedEventArgs e) {
             Window.Current.SetTitleBar(BackgroundElement);
             // Register events
-            _coreTitleBar.IsVisibleChanged += OnIsVisibleChanged;
+            //_coreTitleBar.IsVisibleChanged += OnIsVisibleChanged;
             _coreTitleBar.LayoutMetricsChanged += OnLayoutMetricsChanged;
 
             _uiSettings.ColorValuesChanged += OnColorValuesChanged;
@@ -86,7 +86,7 @@ namespace MT.UWP.ControlLib {
         private void OnUnloaded(object sender, RoutedEventArgs e) {
             // Unregister events
             _coreTitleBar.LayoutMetricsChanged -= OnLayoutMetricsChanged;
-            _coreTitleBar.IsVisibleChanged -= OnIsVisibleChanged;
+            //_coreTitleBar.IsVisibleChanged -= OnIsVisibleChanged;
             _uiSettings.ColorValuesChanged -= OnColorValuesChanged;
             _accessibilitySettings.HighContrastChanged -= OnHighContrastChanged;
             Window.Current.Activated -= OnWindowActivated;
@@ -95,7 +95,7 @@ namespace MT.UWP.ControlLib {
 
 
         private void SetTitleBarVisibility() {
-            LayoutRoot.Visibility = (_coreTitleBar.IsVisible && HideInFullScreen) ? Visibility.Collapsed : Visibility.Visible;
+            LayoutRoot.Visibility = (_appView.IsFullScreenMode && HideInFullScreen) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void SetTitleBarPadding() {
@@ -184,6 +184,11 @@ namespace MT.UWP.ControlLib {
         }
 
         private void OnVisibleBoundsChanged(ApplicationView sender, object args) {
+            SetTitleBarVisibility();
+            SetButtonIcon();
+        }
+
+        private void SetButtonIcon() {
             bool isInFullScreenMode = _appView.IsFullScreenMode;
             if (isInFullScreenMode) {
                 SetValue(WindowStateIconProperty, BackToWindow);
@@ -191,7 +196,6 @@ namespace MT.UWP.ControlLib {
                 SetValue(WindowStateIconProperty, FullScreen);
             }
         }
-
 
         private void btnFullScreen_Click(object sender, RoutedEventArgs e) {
             bool isInFullScreenMode = _appView.IsFullScreenMode;
