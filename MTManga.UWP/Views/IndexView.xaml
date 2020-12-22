@@ -5,14 +5,42 @@
     xmlns:local="using:MTManga.UWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cvt="using:MTManga.UWP.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
     <UserControl.DataContext>
         <Binding Path="Main" Source="{StaticResource Locator}"/>
     </UserControl.DataContext>
-    <StackPanel>
-        <TextBlock Text="{Binding Text}"></TextBlock>
-        <Button Command="{Binding UpdateCommand}">测试</Button>
-    </StackPanel>
+    <UserControl.Resources>
+        <cvt:IntBooleanConverter x:Key="IBC"/>
+    </UserControl.Resources>
+    <Grid>
+        <GridView ItemsSource="{Binding Mangas}">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Width="180" 
+                          Height="300" 
+                          Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="{Binding Cover}"></Image>
+                        <TextBlock Grid.Row="1" Text="{Binding Title}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 10"/>
+                        <TextBlock Grid.Row="2" HorizontalAlignment="Center" Foreground="#909399" Margin="0 0 0 10">
+                            <Run Text="{Binding Current}"></Run>
+                            <Run Text=" / "></Run>
+                            <Run Text="{Binding Total}"></Run>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+        <Button Command="{Binding SelectCommand}" HorizontalAlignment="Center" Visibility="{Binding Mangas.Count,Converter={StaticResource IBC}}">
+            选择文件夹
+        </Button>
+        <Button Command="{Binding NavigateCommand}">导航</Button>
+    </Grid>
 </UserControl>

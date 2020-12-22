@@ -74,6 +74,17 @@ namespace MT.UWP.Common {
                 return defaultValue;
             }
         }
+
+        public bool GetLocalSetting(Enum key, out string value) {
+            var localcontainer = currentContainer();
+            bool isKeyExist = localcontainer.Values.ContainsKey(key.ToString());
+            if (isKeyExist) {
+                value = localcontainer.Values[key.ToString()].ToString();
+            } else
+                value = "";
+            return isKeyExist;
+        }
+
         public T GetLocalSetting<T>(Enum key, T defaultValue) {
             var localcontainer = currentContainer();
             bool isKeyExist = localcontainer.Values.ContainsKey(key.ToString());

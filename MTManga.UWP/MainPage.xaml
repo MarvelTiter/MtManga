@@ -4,58 +4,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MTManga.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:brushes="using:Microsoft.Toolkit.Uwp.UI.Media"
-    xmlns:effects="using:Microsoft.Toolkit.Uwp.UI.Media.Effects"
-    xmlns:mclib="using:MT.UWP.ControlLib"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"    
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light" Source="theme/Light.xaml"/>
-                <ResourceDictionary x:Key="Dark" Source="theme/Dark.xaml"/>
-            </ResourceDictionary.ThemeDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
+    Background="{ThemeResource SystemControlAcrylicElementBrush}">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <mclib:AppTitleBar HideInFullScreen="{Binding Source={StaticResource AppConfigInstance},Path=Config.IsHideTitleBarButtonInFullScreen}"></mclib:AppTitleBar>
-        <Grid Grid.Row="1">
-            <Pivot ItemsSource="{x:Bind Menu}" >
-                <Pivot.HeaderTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Header}"/>
-                    </DataTemplate>
-                </Pivot.HeaderTemplate>
-                <Pivot.ItemTemplate>
-                    <DataTemplate>
-                        <PivotItem>
-                            <ScrollViewer Content="{Binding Content}"/>
-                        </PivotItem>
-                    </DataTemplate>
-                </Pivot.ItemTemplate>
-            </Pivot>
-        </Grid>
-        <Grid Grid.Row="2">
-            <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
-                <AppBarButton Icon="Add" Label="Add"/>
-                <AppBarButton Icon="Edit" Label="Edit"/>
-                <AppBarButton Icon="Share" Label="Share"/>
-                <CommandBar.SecondaryCommands>
-                    <AppBarButton Icon="Setting" Label="Settings">
-                        <AppBarButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="Control" Key="I" />
-                        </AppBarButton.KeyboardAccelerators>
-                    </AppBarButton>
-                </CommandBar.SecondaryCommands>
-            </CommandBar>
-        </Grid>
+        <muxc:NavigationView PaneDisplayMode="LeftCompact"
+                        Header="123"
+                        CompactPaneLength="100">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem Content="Menu Item1" Tag="SamplePage1" x:Name="SamplePage1Item">
+                    <muxc:NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Play" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.MenuItems>
+        </muxc:NavigationView>                
     </Grid>
-
 </Page>

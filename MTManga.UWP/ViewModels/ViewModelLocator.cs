@@ -1,13 +1,16 @@
 ﻿using MT.MVVM.Core;
 using MT.MVVM.Core.Ioc;
 using MT.MVVM.Core.View;
+using MTManga.UWP.Pages;
+using MTManga.UWP.Views;
 
 namespace MTManga.UWP.ViewModels {
     public class ViewModelLocator {
         private static ViewModelLocator _instance;
+        private static object _insLock = new object();
         public static ViewModelLocator Current {
             get {
-                lock (_instance) {
+                lock (_insLock) {
                     if (_instance == null)
                         _instance = new ViewModelLocator();
                     return _instance;
@@ -20,7 +23,10 @@ namespace MTManga.UWP.ViewModels {
             ServiceLocator.SetLocatorProvider(() => MIoC.Default);
             InitNavigation();
             MIoC.Default.RegisterSingle<IndexVM>();
+            //MIoC.Default.RegisterSingle<HomeVM>();
         }
+
+        public HomeVM Home => ServiceLocator.Current.GetSingleton<HomeVM>();
 
         public IndexVM Main => ServiceLocator.Current.GetSingleton<IndexVM>();
 

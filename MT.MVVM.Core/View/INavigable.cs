@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTManga.UWP.Enums {
-    public enum ConfigEnum {
-        All,
-        RootFolderToken
+namespace MT.MVVM.Core.View {
+    public interface INavigable {
+        void NavigateTo();
+        void NavigateFrom();
     }
 }

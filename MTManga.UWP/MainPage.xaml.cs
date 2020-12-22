@@ -1,5 +1,7 @@
 ﻿using MT.UWP.Common;
 using MT.UWP.Common.Models;
+using MTManga.UWP.Pages;
+using MTManga.UWP.ViewModels;
 using MTManga.UWP.Views;
 using System;
 using System.Collections.Generic;
@@ -27,24 +29,19 @@ namespace MTManga.UWP {
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
     public sealed partial class MainPage : Page {
+
         public List<MenuModel> Menu { get; set; }
         public MainPage() {
             this.InitializeComponent();
             Menu = new List<MenuModel>();
             Menu.Add(new MenuModel {
                 Header = "首页",
-                Content = new IndexView()
+                Content = new IndexView()//ServiceLocator.Current.GetSingleton<IndexView>()
             });
             Menu.Add(new MenuModel {
                 Header = "设置",
-                Content = new Setting()
+                Content = new Setting()//ServiceLocator.Current.GetSingleton<Setting>()
             });
-            DataContext = this;
         }
-    }
-
-    public class MenuModel {
-        public string Header { get; set; }
-        public object Content { get; set; }
-    }
+    }    
 }

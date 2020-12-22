@@ -1,15 +1,18 @@
 ﻿using MT.UWP.Common.IServices;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using Windows.Storage.Search;
 
 namespace MT.UWP.Common {
-    public class IOService  {
+    public class IOService {
         IJsonConvertService jsonConvertService;
         public IOService() {
             jsonConvertService = new NewtonJson();
@@ -19,12 +22,16 @@ namespace MT.UWP.Common {
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             // .XXX 
             Regex typeReg = new Regex(@"^\.[\w]+$");
-            foreach (var type in types) {
-                if (type == "*" || typeReg.IsMatch(type))
-                    picker.FileTypeFilter.Add(type);
-                else
-                    throw new InvalidCastException("文件后缀名不正确");
-            }
+            if (types.Length == 0)
+                picker.FileTypeFilter.Add("*");
+            else
+                foreach (var type in types) {
+                    if (type == "*" || typeReg.IsMatch(type))
+                        picker.FileTypeFilter.Add(type);
+                    else
+                        throw new InvalidCastException("文件后缀名不正确");
+                }
+
             var file = await picker.PickSingleFileAsync();
             return file;
         }
@@ -53,6 +60,42 @@ namespace MT.UWP.Common {
         public async Task SetLocalDataAsync(string fileName, string content) {
             var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(file, content);
+        }
+
+        public async Task<StorageFolder> GetUserFolderAsync(string token = null) {
+            var picker = new FolderPicker();
+            picker.FileTypeFilter.Add("*");
+            StorageFolder folder;
+            if (token == null) {
+                folder = await picker.PickSingleFolderAsync();
+            } else {
+                folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(token);
+            }
+            return folder;
+        }
+
+        public string SaveFolder(StorageFolder folder) {
+            var token = StorageApplicationPermissions.FutureAccessList.Add(folder);
+            return token;
+        }
+
+        public async Task<IReadOnlyList<IStorageItem>> GetLocalItemInFolderAsync(StorageFolder folder, params string[] types) {
+            QueryOptions itemQuery = new QueryOptions();
+            //itemQuery.SortOrder.Add(new SortEntry { PropertyName = "System.FileName", AscendingOrder = true });
+            Regex typeReg = new Regex(@"^\.[\w]+$");
+            if (types.Length == 0)
+                itemQuery.FileTypeFilter.Add("*");
+            else
+                foreach (var type in types) {
+                    if (type == "*" || typeReg.IsMatch(type))
+                        itemQuery.FileTypeFilter.Add(type);
+                    else
+                        throw new InvalidCastException("文件后缀名不正确");
+                }
+            //itemQuery.ApplicationSearchFilter = "新建";
+            var queryResult = folder.CreateItemQueryWithOptions(itemQuery);
+            var storageItems = await queryResult.GetItemsAsync();
+            return storageItems;
         }
     }
 }

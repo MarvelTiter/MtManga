@@ -17,7 +17,7 @@ namespace MTManga.UWP.Models {
         }
 
         public AppConfigHelper() {
-            Config = App.AppHelper.Setting.GetSetting<AppConfig>(ConfigEnum.All);
+            Config = App.Helper.Setting.GetSetting<AppConfig>(ConfigEnum.All);
         }
     }
 }
