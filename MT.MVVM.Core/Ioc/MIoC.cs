@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonServiceLocator;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -7,15 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MT.MVVM.Core.Ioc {
-    public partial class MIoC : IMIocContainter, IMIocController {
+    public partial class MIoC : IMIocContainter, IServiceLocator {
+
+        private readonly string _defaultKey = Guid.NewGuid().ToString();
+        private static readonly object _instanceLock = new object();
+        private readonly object _syncLock = new object();
+
         private Dictionary<Type, Type> _interfaceClassMapper = new Dictionary<Type, Type>();
         private Dictionary<Type, ConstructorInfo> _ctorInfos = new Dictionary<Type, ConstructorInfo>();
         private Dictionary<Type, Dictionary<string, Delegate>> _factories = new Dictionary<Type, Dictionary<string, Delegate>>();
-        private readonly string _defaultKey = Guid.NewGuid().ToString();
-        private Dictionary<Type, Dictionary<string, object>> _instancesRegistry = new Dictionary<Type, Dictionary<string, object>>();
+        private Dictionary<Type, Dictionary<string, object>> _cacheInstance = new Dictionary<Type, Dictionary<string, object>>();
+        private Dictionary<Type, bool> _cacheType = new Dictionary<Type, bool>();
 
-        private static readonly object _instanceLock = new object();
-        private readonly object _syncLock = new object();
 
         private static MIoC _default;
         public static MIoC Default {
@@ -32,72 +36,99 @@ namespace MT.MVVM.Core.Ioc {
             }
         }
 
-        #region Container member
+        public void RegisterScope<T>() where T : class {
+            Register<T>(false, false, null);
+        }
 
         public void RegisterScope<TI, T>()
-          where TI : class
-          where T : class, TI {
-            Register<TI, T>(false);
-        }
-
-        public void RegisterSingle<TI, T>()
             where TI : class
             where T : class, TI {
-            Register<TI, T>(true);
+            Register<TI, T>(false, false, null);
         }
 
-        public void RegisterSingle<TI, T>(string key)
+        public void RegisterSingle<T>(bool createImmediately, string key = null)
+            where T : class {
+            Register<T>(true, createImmediately, key);
+        }
+
+        public void RegisterSingle<TI, T>(bool createImmediately, string key = null)
             where TI : class
             where T : class, TI {
-            Register<TI, T>(true, key);
+            Register<TI, T>(true, createImmediately, key);
         }
 
-        public void RegisterScope<T>()
-          where T : class {
-            Register<T>(false);
-        }
-        public void RegisterSingle<T>()
-           where T : class {
-            Register<T>(true);
+        public void RegisterSingle<T>(Func<T> factory, string key = null)
+            where T : class {
+            Register<T>(true, true, key, factory);
         }
 
-        public void RegisterSingle<T>(string key)
-           where T : class {
-            Register<T>(true, key);
+        public void UnRegister<T>(string key = null) {
+            lock (_syncLock) {
+                Type typeFromHandle = typeof(T);
+                Type keyType = (!_interfaceClassMapper.ContainsKey(typeFromHandle)) ? typeFromHandle : (_interfaceClassMapper[typeFromHandle] ?? typeFromHandle);
+                if (key != null) {
+                    UnRegister(typeFromHandle, key);
+                    return;
+                }
+                if (_cacheInstance.ContainsKey(typeFromHandle)) {
+                    _cacheInstance.Remove(typeFromHandle);
+                }
+
+                if (_interfaceClassMapper.ContainsKey(typeFromHandle)) {
+                    _interfaceClassMapper.Remove(typeFromHandle);
+                }
+
+                if (_factories.ContainsKey(typeFromHandle)) {
+                    _factories.Remove(typeFromHandle);
+                }
+
+                if (_ctorInfos.ContainsKey(keyType)) {
+                    _ctorInfos.Remove(keyType);
+                }
+            }
         }
 
-        public void RegisterSingle<TI, T>(T ins)
-            where TI : class
-            where T : class, TI {
-            Register<TI, T>(_defaultKey, ins);
+        private void UnRegister(Type typeFromHandle, string key) {
+            if (_cacheInstance.ContainsKey(typeFromHandle) && _cacheInstance[typeFromHandle].ContainsKey(key))
+                _cacheInstance[typeFromHandle].Remove(key);
+
+            if (_factories.ContainsKey(typeFromHandle) && _factories[typeFromHandle].ContainsKey(key))
+                _factories[typeFromHandle].Remove(key);
         }
 
-        public void RegisterSingle<TI, T>(T ins, string key)
-            where TI : class
-            where T : class, TI {
-            Register<TI, T>(key, ins);
+
+        #region IServiceLocator member
+
+        public object GetInstance(Type serviceType) {
+            return DoGetService(serviceType, _defaultKey);
         }
+
+        public object GetInstance(Type serviceType, string key) {
+            return DoGetService(serviceType, key);
+        }
+
+        public IEnumerable<object> GetAllInstances(Type serviceType) {
+            throw new NotImplementedException();
+        }
+
+        public TService GetInstance<TService>() {
+            return (TService)DoGetService(typeof(TService), _defaultKey);
+        }
+
+        public TService GetInstance<TService>(string key) {
+            return (TService)DoGetService(typeof(TService), key);
+        }
+
+        public IEnumerable<TService> GetAllInstances<TService>() {
+            throw new NotImplementedException();
+        }
+
+        object IServiceProvider.GetService(Type serviceType) {
+            return GetInstance(serviceType);
+        }
+
 
         #endregion
-
-        #region controller member
-
-        public T GetScope<T>() {
-            return (T)DoGetService(typeof(T), _defaultKey, false);
-        }
-
-        public T GetSingleton<T>() {
-            return (T)DoGetService(typeof(T), _defaultKey);
-        }
-        public T GetScope<T>(string key) {
-            return (T)DoGetService(typeof(T), key, false);
-        }
-
-        public T GetSingleton<T>(string key) {
-            return (T)DoGetService(typeof(T), key);
-        }
-
-        #endregion              
 
     }
 
@@ -105,7 +136,7 @@ namespace MT.MVVM.Core.Ioc {
     /// private member
     /// </summary>
     public partial class MIoC {
-        private void Register<TI, T>(bool single, string key = null)
+        private void Register<TI, T>(bool single, bool createImmediately, string key)
             where TI : class
             where T : class, TI {
             lock (_syncLock) {
@@ -124,40 +155,19 @@ namespace MT.MVVM.Core.Ioc {
                     _interfaceClassMapper.Add(interfaceType, classType);
                     _ctorInfos.Add(classType, GetConstructorInfo(classType));
                 }
-
                 Func<TI> factory = MakeInstance<TI>;
                 DoRegister(interfaceType, factory, key ?? _defaultKey);
-                if (single) {
+
+                if (!_cacheType.ContainsKey(interfaceType))
+                    _cacheType.Add(interfaceType, single);
+
+                if (createImmediately) {
                     CacheInstance(interfaceType, key ?? _defaultKey);
                 }
             }
         }
 
-        private void Register<TI, T>(string key, T ins) where T : TI {
-            lock (_syncLock) {
-                var interfaceType = typeof(TI);
-                var classType = typeof(T);
-
-                if (_interfaceClassMapper.ContainsKey(interfaceType)) {
-                    if (_interfaceClassMapper[interfaceType] != classType) {
-                        throw new InvalidOperationException(
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                "There is already a class registered for {0}.",
-                                interfaceType.FullName));
-                    }
-                } else {
-                    _interfaceClassMapper.Add(interfaceType, classType);
-                    _ctorInfos.Add(classType, GetConstructorInfo(classType));
-                }
-
-                Func<TI> factory = () => ins;
-                DoRegister(interfaceType, factory, key ?? _defaultKey);
-                CacheInstance(interfaceType, key ?? _defaultKey);
-            }
-        }
-
-        private void Register<T>(bool single, string key = null) {
+        private void Register<T>(bool single, bool createImmediately, string key, Func<T> fac = null) {
             var classType = typeof(T);
 
             if (classType.IsInterface) {
@@ -177,13 +187,17 @@ namespace MT.MVVM.Core.Ioc {
 
                 if (!_interfaceClassMapper.ContainsKey(classType)) {
                     _interfaceClassMapper.Add(classType, null);
+                    _ctorInfos.Add(classType, GetConstructorInfo(classType));
                 }
 
-                _ctorInfos.Add(classType, GetConstructorInfo(classType));
-                Func<T> factory = MakeInstance<T>;
+                Func<T> factory = fac ?? MakeInstance<T>;
+
                 DoRegister(classType, factory, key ?? _defaultKey);
 
-                if (single) {
+                if (!_cacheType.ContainsKey(classType))
+                    _cacheType.Add(classType, single);
+
+                if (createImmediately) {
                     CacheInstance(classType, key ?? _defaultKey);
                 }
             }
@@ -274,11 +288,12 @@ namespace MT.MVVM.Core.Ioc {
         private object GetService(Type serviceType) {
             return DoGetService(serviceType, _defaultKey);
         }
-        private object DoGetService(Type serviceType, string key, bool cache = true) {
+        private object DoGetService(Type serviceType, string key) {
             lock (_syncLock) {
                 if (string.IsNullOrEmpty(key)) {
                     key = _defaultKey;
                 }
+                var cache = _cacheType.ContainsKey(serviceType) && _cacheType[serviceType];
                 if (cache)
                     return CacheInstance(serviceType, key);
                 else
@@ -297,26 +312,20 @@ namespace MT.MVVM.Core.Ioc {
                 }
             }
             throw new Exception(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Type not found: {0}",
-                    serviceType.FullName));
+                string.Format("Type not found: {0}", serviceType.FullName));
 
         }
         private object CacheInstance(Type serviceType, string key) {
             Dictionary<string, object> instances = null;
-            if (!_instancesRegistry.ContainsKey(serviceType)) {
+            if (!_cacheInstance.ContainsKey(serviceType)) {
                 if (!_interfaceClassMapper.ContainsKey(serviceType)) {
                     throw new Exception(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Type not found in cache: {0}.",
-                            serviceType.FullName));
+                        string.Format("Type not found in cache: {0}.", serviceType.FullName));
                 }
                 instances = new Dictionary<string, object>();
-                _instancesRegistry.Add(serviceType, instances);
+                _cacheInstance.Add(serviceType, instances);
             } else {
-                instances = _instancesRegistry[serviceType];
+                instances = _cacheInstance[serviceType];
             }
 
             if (instances != null

@@ -6,26 +6,23 @@ using System.Threading.Tasks;
 
 namespace MT.MVVM.Core.Ioc {
     public interface IMIocContainter {
-        void RegisterScope<TI, T>()
-            where TI : class
-            where T : class, TI;
-
-        void RegisterSingle<TI, T>()
-           where TI : class
-           where T : class, TI;
 
         void RegisterScope<T>()
-           where T : class;
+          where T : class;
+        void RegisterScope<TI, T>()
+           where TI : class
+           where T : class, TI;
 
-        void RegisterSingle<T>()
+        void RegisterSingle<T>(bool createImmediately, string key = null)
             where T : class;
 
-        void RegisterSingle<TI, T>(T ins)
-           where TI : class
-           where T : class, TI;
+        void RegisterSingle<TI, T>(bool createImmediately, string key = null)
+          where TI : class
+          where T : class, TI;
 
-        void RegisterSingle<TI, T>(T ins, string key)
-           where TI : class
-           where T : class, TI;
+        void RegisterSingle<T>(Func<T> factory, string key = null)
+          where T : class;
+
+        void UnRegister<T>(string key = null);
     }
 }
