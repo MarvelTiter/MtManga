@@ -52,10 +52,6 @@ namespace MTManga.UWP.ViewModels {
 
 
 
-
-
-
-
         private async Task InitItems(StorageFolder folder) {
             var items = await App.Helper.IO.GetLocalItemInFolderAsync(folder, ".zip");
             foreach (var item in items) {

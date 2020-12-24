@@ -5,14 +5,33 @@
     xmlns:local="using:MTManga.UWP.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:selector="using:MTManga.UWP.TemplateSelector"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.DataContext>
         <Binding Path="Home" Source="{StaticResource Locator}"></Binding>
     </Page.DataContext>
+    <Page.Resources>
+        <selector:MenuItemSelector x:Key="menuSelector">
+            <selector:MenuItemSelector.MenuItem>
+                <DataTemplate>
+                    <muxc:NavigationViewItem Content="{Binding Path=Header}">
+                    </muxc:NavigationViewItem>
+                </DataTemplate>
+            </selector:MenuItemSelector.MenuItem>
+        </selector:MenuItemSelector>
+    </Page.Resources>
     <Grid>
-        <Pivot ItemsSource="{Binding Menu}" 
-               Margin="20 0">
+        <muxc:NavigationView PaneDisplayMode="Top"
+                             Margin="0 32 0 0"
+                             MenuItemsSource="{Binding Menu}"
+                             SelectedItem="{Binding CurrentMenu}"
+                             MenuItemTemplateSelector="{StaticResource menuSelector}">
+            <ScrollViewer Content="{Binding Content}"/>
+        </muxc:NavigationView>
+        <!--<Pivot ItemsSource="{Binding Menu}"
+               Margin="20 50 0 0">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Header}"/>
@@ -25,6 +44,11 @@
                     </PivotItem>
                 </DataTemplate>
             </Pivot.ItemTemplate>
-        </Pivot>
+        </Pivot>-->
+        <!--<StackPanel>
+            <TextBlock Text="{Binding Content}"></TextBlock>
+            <Button Command="{Binding LoadedCommand}">11111</Button>
+            <Button Command="{Binding NavigateCommand}">Navigate</Button>
+        </StackPanel>-->
     </Grid>
 </Page>

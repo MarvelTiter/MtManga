@@ -9,9 +9,9 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <UserControl.DataContext>
+    <!--<UserControl.DataContext>
         <Binding Path="Main" Source="{StaticResource Locator}"/>
-    </UserControl.DataContext>
+    </UserControl.DataContext>-->
     <UserControl.Resources>
         <cvt:IntBooleanConverter x:Key="IBC"/>
     </UserControl.Resources>

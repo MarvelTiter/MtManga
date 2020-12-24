@@ -23,7 +23,10 @@ namespace MTManga.UWP.ViewModels {
             ServiceLocator.SetLocatorProvider(() => MIoC.Default);
             InitNavigation();
             MIoC.Default.RegisterSingle<IndexVM>();
-            //MIoC.Default.RegisterSingle<HomeVM>();
+            MIoC.Default.RegisterScope<IndexView>();
+            MIoC.Default.RegisterScope<Setting>();
+            MIoC.Default.RegisterSingle<HomeVM>();
+            _instance = this;
         }
 
         public HomeVM Home => ServiceLocator.Current.GetSingleton<HomeVM>();
@@ -32,8 +35,9 @@ namespace MTManga.UWP.ViewModels {
 
 
         private void InitNavigation() {
-            var nav = new NavigationService();
+            var nav = new NavigationService("rootFrame");
             //
+            nav.Configura(nameof(MangaChapters), typeof(MangaChapters));
 
             NavigationService = nav;
         }

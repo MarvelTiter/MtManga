@@ -5,11 +5,42 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace MT.MVVM.Core.View {
     public class NavigationService : INavigationService {
         private const string Root = "__Root__";
         private const string Unknow = "__Unknow__";
+
+        public NavigationService() {
+
+        }
+
+        public NavigationService(string customFrameName) {
+            this.customFrameName = customFrameName;
+        }
+
+        private Frame FindFrameFromVisualTreeByName(DependencyObject parent) {
+            var count = VisualTreeHelper.GetChildrenCount(parent);
+            if (count == 0) {
+                return null;
+            }
+            for (var i = 0; i < count; i++) {
+                var fe = VisualTreeHelper.GetChild(parent, i) as FrameworkElement;
+                if (fe is Frame frame) {
+                    if (frame.Name == customFrameName) {
+                        return frame;
+                    }
+                } else {
+                    fe = FindFrameFromVisualTreeByName(fe);
+                    if (fe != null) {
+                        return fe as Frame;
+                    }
+                }
+                
+            }
+            return null;
+        }
 
         public string CurrentPageKey {
             get {
@@ -32,20 +63,20 @@ namespace MT.MVVM.Core.View {
             }
         }
         private readonly Dictionary<string, Type> _pagesByKey = new Dictionary<string, Type>();
-
+        private readonly string customFrameName;
         private Frame _currentFrame;
         public Frame CurrentFrame {
             get {
                 if (_currentFrame == null)
-                    _currentFrame = (Frame)Window.Current.Content;
+                    _currentFrame = FindFrameFromVisualTreeByName(Window.Current.Content);
                 return _currentFrame;
             }
             set => _currentFrame = value;
         }
 
         public void GoBack() {
-            if (CurrentFrame.CanGoForward) {
-                CurrentFrame.GoForward();
+            if (CurrentFrame.CanGoBack) {
+                CurrentFrame.GoBack();
             }
         }
 

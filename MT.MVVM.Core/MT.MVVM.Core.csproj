@@ -120,6 +120,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BaseViewModel.cs" />
     <Compile Include="Ioc\IMIocContainter.cs" />
     <Compile Include="Ioc\IMIocController.cs" />
     <Compile Include="Ioc\MIoC.cs" />
