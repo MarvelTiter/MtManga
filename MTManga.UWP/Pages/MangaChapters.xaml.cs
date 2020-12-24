@@ -25,8 +25,5 @@ namespace MTManga.UWP.Pages {
             this.InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) {
-            ViewModelLocator.Current.NavigationService.GoBack();
-        }
     }
 }

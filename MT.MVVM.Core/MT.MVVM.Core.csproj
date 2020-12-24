@@ -120,7 +120,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BaseViewModel.cs" />
+    <Compile Include="ViewModelBase.cs" />
     <Compile Include="Ioc\IMIocContainter.cs" />
     <Compile Include="Ioc\MIoC.cs" />
     <Compile Include="ObservableObject.cs" />
@@ -129,6 +129,7 @@
     <Compile Include="ViewModelLocater.cs" />
     <Compile Include="View\INavigable.cs" />
     <Compile Include="View\INavigationService.cs" />
+    <Compile Include="View\NavigatedArgs.cs" />
     <Compile Include="View\NavigationService.cs" />
     <EmbeddedResource Include="Properties\MT.MVVM.Core.rd.xml" />
   </ItemGroup>

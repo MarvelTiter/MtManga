@@ -7,6 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:selector="using:MTManga.UWP.TemplateSelector"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.DataContext>
@@ -21,20 +23,21 @@
                 </DataTemplate>
             </selector:MenuItemSelector.MenuItem>
         </selector:MenuItemSelector>
-    </Page.Resources>
+    </Page.Resources>    
     <Grid>
-        <muxc:NavigationView PaneDisplayMode="Top"
+        <!--<muxc:NavigationView PaneDisplayMode="Top"
                              Margin="0 32 0 0"
                              MenuItemsSource="{Binding Menu}"
                              SelectedItem="{Binding CurrentMenu}"
                              MenuItemTemplateSelector="{StaticResource menuSelector}">
             <ScrollViewer Content="{Binding Content}"/>
-        </muxc:NavigationView>
-        <!--<Pivot ItemsSource="{Binding Menu}"
-               Margin="20 50 0 0">
+        </muxc:NavigationView>-->
+        <Pivot ItemsSource="{Binding Menu}"
+               x:Name="pivot"
+               Margin="20 50 0 0">           
             <Pivot.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Header}"/>
+                    <TextBlock Text="{Binding Header}" FontSize="24"/>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <Pivot.ItemTemplate>
@@ -44,11 +47,6 @@
                     </PivotItem>
                 </DataTemplate>
             </Pivot.ItemTemplate>
-        </Pivot>-->
-        <!--<StackPanel>
-            <TextBlock Text="{Binding Content}"></TextBlock>
-            <Button Command="{Binding LoadedCommand}">11111</Button>
-            <Button Command="{Binding NavigateCommand}">Navigate</Button>
-        </StackPanel>-->
+        </Pivot>
     </Grid>
 </Page>

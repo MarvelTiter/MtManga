@@ -1,7 +1,9 @@
-﻿using MT.MVVM.Core;
+﻿using CommonServiceLocator;
+using MT.MVVM.Core;
 using MT.MVVM.Core.Ioc;
 using MT.MVVM.Core.View;
 using MTManga.UWP.Pages;
+using MTManga.UWP.Services;
 using MTManga.UWP.Views;
 
 namespace MTManga.UWP.ViewModels {
@@ -22,16 +24,18 @@ namespace MTManga.UWP.ViewModels {
         public ViewModelLocator() {
             ServiceLocator.SetLocatorProvider(() => MIoC.Default);
             InitNavigation();
-            MIoC.Default.RegisterSingle<IndexVM>();
-            MIoC.Default.RegisterScope<IndexView>();
-            MIoC.Default.RegisterScope<Setting>();
-            MIoC.Default.RegisterSingle<HomeVM>();
+            MIoC.Default.RegisterSingle<IndexVM>(false);
+            MIoC.Default.RegisterSingle<HomeVM>(false);
+            MIoC.Default.RegisterScope<IMangaCollectionService, LocalManga>();
+            MIoC.Default.RegisterScope<MangaChaptersVM>();
             _instance = this;
         }
 
-        public HomeVM Home => ServiceLocator.Current.GetSingleton<HomeVM>();
+        public HomeVM Home => ServiceLocator.Current.GetInstance<HomeVM>();
 
-        public IndexVM Main => ServiceLocator.Current.GetSingleton<IndexVM>();
+        public IndexVM Main => ServiceLocator.Current.GetInstance<IndexVM>();
+
+        public MangaChaptersVM Chapters => ServiceLocator.Current.GetInstance<MangaChaptersVM>();
 
 
         private void InitNavigation() {

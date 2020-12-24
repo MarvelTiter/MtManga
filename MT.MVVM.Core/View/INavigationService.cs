@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace MT.MVVM.Core.View {
     public interface INavigationService {
@@ -14,9 +15,11 @@ namespace MT.MVVM.Core.View {
 
         void GoBack();
 
-        void NavigateTo(string pageKey);
+        void GoForward();
 
-        void NavigateTo(string pageKey, object parameter);
+        bool NavigateTo(string pageKey, NavigationTransitionInfo infoOverride = null);
+
+        bool NavigateTo(string pageKey, object parameter, NavigationTransitionInfo infoOverride = null);
 
     }
 }

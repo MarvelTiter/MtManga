@@ -78,24 +78,5 @@ namespace MT.UWP.Common {
             var token = StorageApplicationPermissions.FutureAccessList.Add(folder);
             return token;
         }
-
-        public async Task<IReadOnlyList<IStorageItem>> GetLocalItemInFolderAsync(StorageFolder folder, params string[] types) {
-            QueryOptions itemQuery = new QueryOptions();
-            //itemQuery.SortOrder.Add(new SortEntry { PropertyName = "System.FileName", AscendingOrder = true });
-            Regex typeReg = new Regex(@"^\.[\w]+$");
-            if (types.Length == 0)
-                itemQuery.FileTypeFilter.Add("*");
-            else
-                foreach (var type in types) {
-                    if (type == "*" || typeReg.IsMatch(type))
-                        itemQuery.FileTypeFilter.Add(type);
-                    else
-                        throw new InvalidCastException("文件后缀名不正确");
-                }
-            //itemQuery.ApplicationSearchFilter = "新建";
-            var queryResult = folder.CreateItemQueryWithOptions(itemQuery);
-            var storageItems = await queryResult.GetItemsAsync();
-            return storageItems;
-        }
     }
 }

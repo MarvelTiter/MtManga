@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Navigation;
 
 namespace MT.MVVM.Core.View {
-    public interface INavigable {
-        void OnNavigateTo(NavigationEventArgs e);
-        void OnNavigateFrom(NavigatedArgs e);
-        void OnNavigatingFrom(NavigatingCancelEventArgs e);
+    public class NavigatedArgs {
+        public object Content { get; set; }
+        public NavigationMode NavigationMode { get; set; }
     }
 }

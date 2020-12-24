@@ -18,9 +18,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace MTManga.UWP.Views {
     public sealed partial class IndexView : UserControl {
-        public IndexView(IndexVM indexVM) {
+        public IndexView() {
             this.InitializeComponent();
-            this.DataContext = indexVM;
+            //this.DataContext = indexVM;
         }
     }
 }

@@ -121,6 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AppHelper.cs" />
+    <Compile Include="Extension\FolderExtension.cs" />
     <Compile Include="IOService.cs" />
     <Compile Include="IServices\IJsonConvertService.cs" />
     <Compile Include="IServices\NewtonJson.cs" />

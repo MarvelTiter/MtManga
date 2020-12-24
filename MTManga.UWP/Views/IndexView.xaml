@@ -9,9 +9,9 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <!--<UserControl.DataContext>
+    <UserControl.DataContext>
         <Binding Path="Main" Source="{StaticResource Locator}"/>
-    </UserControl.DataContext>-->
+    </UserControl.DataContext>
     <UserControl.Resources>
         <cvt:IntBooleanConverter x:Key="IBC"/>
     </UserControl.Resources>
@@ -41,6 +41,5 @@
         <Button Command="{Binding SelectCommand}" HorizontalAlignment="Center" Visibility="{Binding Mangas.Count,Converter={StaticResource IBC}}">
             选择文件夹
         </Button>
-        <Button Command="{Binding NavigateCommand}">导航</Button>
     </Grid>
 </UserControl>

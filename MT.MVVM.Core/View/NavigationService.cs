@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 
 namespace MT.MVVM.Core.View {
     public class NavigationService : INavigationService {
         private const string Root = "__Root__";
         private const string Unknow = "__Unknow__";
+
+        public event NavigationFailedEventHandler NavigationFailed;
+        public event NavigatedEventHandler Navigated;
 
         public NavigationService() {
 
@@ -37,7 +42,7 @@ namespace MT.MVVM.Core.View {
                         return fe as Frame;
                     }
                 }
-                
+
             }
             return null;
         }
@@ -67,29 +72,65 @@ namespace MT.MVVM.Core.View {
         private Frame _currentFrame;
         public Frame CurrentFrame {
             get {
-                if (_currentFrame == null)
+                if (_currentFrame == null) {
                     _currentFrame = FindFrameFromVisualTreeByName(Window.Current.Content);
+                    RegisterFrameEvents();
+                }
                 return _currentFrame;
             }
-            set => _currentFrame = value;
+            set {
+                UnregisterFrameEvents();
+                _currentFrame = value;
+                RegisterFrameEvents();
+            }
         }
 
         public void GoBack() {
             if (CurrentFrame.CanGoBack) {
                 CurrentFrame.GoBack();
+                var currentPage = CurrentFrame.Content as Page;
+                if (currentPage?.DataContext is INavigable nav) {
+                    nav.OnNavigateFrom(new NavigatedArgs {
+                        Content = CurrentFrame.Content,
+                        NavigationMode = NavigationMode.Back
+                    });
+                }
+
             }
         }
 
-        public void NavigateTo(string pageKey) {
-            NavigateTo(pageKey, null);
+        public void GoForward() {
+            if (CurrentFrame.CanGoForward) {
+                CurrentFrame.GoForward();
+                var currentPage = CurrentFrame.Content as Page;
+                if (currentPage?.DataContext is INavigable nav) {
+                    nav.OnNavigateFrom(new NavigatedArgs {
+                        Content = CurrentFrame.Content,
+                        NavigationMode = NavigationMode.Forward
+                    });
+                }
+
+            }
         }
 
-        public void NavigateTo(string pageKey, object parameter) {
+        public bool NavigateTo(string pageKey, NavigationTransitionInfo infoOverride = null) {
+            return NavigateTo(pageKey, null, infoOverride);
+        }
+
+        public bool NavigateTo(string pageKey, object parameter, NavigationTransitionInfo infoOverride = null) {
             lock (_pagesByKey) {
                 if (!_pagesByKey.ContainsKey(pageKey)) {
                     throw new ArgumentException($"No such page: {pageKey}.", "pageKey");
                 }
-                CurrentFrame.Navigate(_pagesByKey[pageKey], parameter);
+                var currentPage = CurrentFrame.Content as Page;
+                var b = CurrentFrame.Navigate(_pagesByKey[pageKey], parameter, infoOverride);
+                if (b && currentPage is INavigable nav) {
+                    nav.OnNavigateFrom(new NavigatedArgs {
+                        Content = CurrentFrame.Content,
+                        NavigationMode = NavigationMode.New
+                    });
+                }
+                return b;
             }
         }
 
@@ -105,6 +146,40 @@ namespace MT.MVVM.Core.View {
 
                 _pagesByKey.Add(key, pageType);
             }
+        }
+
+        private void RegisterFrameEvents() {
+            if (CurrentFrame != null) {
+                CurrentFrame.Navigated += Frame_Navigated;
+                CurrentFrame.Navigating += Frame_Navigating;
+                CurrentFrame.NavigationFailed += Frame_NavigationFailed;
+            }
+        }
+
+        private void UnregisterFrameEvents() {
+            if (CurrentFrame != null) {
+                CurrentFrame.Navigated -= Frame_Navigated;
+                CurrentFrame.Navigating -= Frame_Navigating;
+                CurrentFrame.NavigationFailed += Frame_NavigationFailed;
+            }
+        }
+
+
+        private void Frame_NavigationFailed(object sender, NavigationFailedEventArgs e) {
+            NavigationFailed?.Invoke(sender, e);
+        }
+
+        private void Frame_Navigating(object sender, NavigatingCancelEventArgs e) {
+            var currentPage = CurrentFrame.Content as Page;
+            if (currentPage is INavigable nav)
+                nav.OnNavigatingFrom(e);
+        }
+
+        private void Frame_Navigated(object sender, NavigationEventArgs e) {
+            var destPage = e.Content as Page;
+            if (destPage is INavigable nav)
+                nav.OnNavigateTo(e);
+            Navigated?.Invoke(sender, e);
         }
     }
 }

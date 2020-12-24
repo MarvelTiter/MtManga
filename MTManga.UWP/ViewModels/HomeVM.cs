@@ -1,4 +1,5 @@
-﻿using MT.MVVM.Core;
+﻿using CommonServiceLocator;
+using MT.MVVM.Core;
 using MT.MVVM.Core.View;
 using MTManga.UWP.Pages;
 using MTManga.UWP.Views;
@@ -30,12 +31,7 @@ namespace MTManga.UWP.ViewModels {
         public MenuModel CurrentMenu {
             get { return _CurrentMenu; }
             set {
-                if (value.Content.Name == nameof(IndexView)) {
-                    Content = ServiceLocator.Current.GetScope<IndexView>();
-                } else if (value.Content.Name == nameof(Setting)) {
-                    Content = ServiceLocator.Current.GetScope<Setting>();
 
-                }
                 SetValue(ref _CurrentMenu, value);
             }
         }
@@ -45,22 +41,24 @@ namespace MTManga.UWP.ViewModels {
             Menu = new List<MenuModel>();
             Menu.Add(new MenuModel {
                 Header = "首页",
-                Content = typeof(IndexView)
+                //Content = ServiceLocator.Current.GetInstance<IndexView>()
             });
             Menu.Add(new MenuModel {
                 Header = "设置",
-                Content = typeof(Setting)
+                //Content = ServiceLocator.Current.GetInstance<Setting>()
             });
+            
         }
 
         public RelayCommand NavigateCommand => new RelayCommand(() => {
             ViewModelLocator.Current.NavigationService.NavigateTo(nameof(MangaChapters));
         });
 
+
     }
 
     public class MenuModel {
         public string Header { get; set; }
-        public Type Content { get; set; }
+        public object Content { get; set; }
     }
 }
