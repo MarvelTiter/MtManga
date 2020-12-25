@@ -3,6 +3,7 @@ using MT.UWP.Common;
 using MT.UWP.Common.Models;
 using MTManga.UWP.Enums;
 using MTManga.UWP.Models;
+using MTManga.UWP.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -26,6 +26,21 @@
                          Color="{ThemeResource SystemListMediumColor}" />
         <SolidColorBrush x:Key="ButtonPressedForegroundBrush"
                          Color="{ThemeResource SystemBaseHighColor}" />
+
+        <Style TargetType="Button"
+                           BasedOn="{StaticResource NavigationBackButtonNormalStyle}">
+            <Setter Property="Foreground"
+                                Value="{StaticResource TitleBarForeground}" />
+            <Setter Property="Width"
+                                Value="46" />
+            <Setter Property="Height"
+                                Value="32" />
+            <Setter Property="IsTabStop"
+                                Value="False" />
+            <Setter Property="FontSize" 
+                                Value="16" />
+        </Style>
+
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot"
           Height="32"
@@ -59,7 +74,9 @@
               Height="32"
               Background="Transparent" />
         <Grid>
-            <TextBlock x:Name="AppName"
+            <StackPanel Orientation="Horizontal">
+                <Button Content="&#xE72B;" Command="{Binding ElementName=Self,Path=BackCommand}"></Button>
+                <TextBlock x:Name="AppName"
                        x:Uid="AppName"
                        Text="{Binding Title,ElementName=Self}"
                        Margin="12,0,12,0"
@@ -70,23 +87,9 @@
                        IsHitTestVisible="False"
                        TextAlignment="Left"                       
                        TextTrimming="CharacterEllipsis" />
+            </StackPanel>
             <StackPanel  HorizontalAlignment="Right"
                          Orientation="Horizontal">
-                <StackPanel.Resources>
-                    <Style TargetType="Button"
-                           BasedOn="{StaticResource NavigationBackButtonNormalStyle}">
-                        <Setter Property="Foreground"
-                                Value="{StaticResource TitleBarForeground}" />
-                        <Setter Property="Width"
-                                Value="46" />
-                        <Setter Property="Height"
-                                Value="32" />
-                        <Setter Property="IsTabStop"
-                                Value="False" />
-                        <Setter Property="FontSize" 
-                                Value="16" />
-                    </Style>
-                </StackPanel.Resources>
                 <StackPanel x:Name="ItemsPanel"                        
                         Orientation="Horizontal">
                 </StackPanel>
@@ -97,7 +100,6 @@
                                 <TextBlock Text="亮度" />
                                 <Slider></Slider>
                                 <TextBlock Text="主题" />
-
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>

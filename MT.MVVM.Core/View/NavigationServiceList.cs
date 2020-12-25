@@ -5,26 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MT.MVVM.Core.View {
-    public class NavigationServiceList {
+    public class NavigationList {
 
         private readonly Dictionary<string, INavigationService> _services = new Dictionary<string, INavigationService>();
-        private static NavigationServiceList _instance;
-        public static NavigationServiceList Instance => _instance ?? (_instance = new NavigationServiceList());
+        private static NavigationList _instance;
+        public static NavigationList Instance => _instance ?? (_instance = new NavigationList());
 
-        public INavigationService this[string key] => _services[key];
+        public INavigationService this[Enum key] => _services[key.ToString()];
 
-        public void Register(string key, INavigationService nav) {
+        public void Register(Enum key, INavigationService nav) {
             if (IsRegistered(key))
                 throw new ArgumentException("This key is already used:" + key);
-            _services.Add(key, nav);
+            _services.Add(key.ToString(), nav);
         }
-        public void Unregister(string key) {
+        public void Unregister(Enum key) {
             if (IsRegistered(key))
-                _services.Remove(key);
+                _services.Remove(key.ToString());
         }
 
-        public bool IsRegistered(string key) {
-            return _services.ContainsKey(key);
+        public bool IsRegistered(Enum key) {
+            return _services.ContainsKey(key.ToString());
         }
     }
 }

@@ -6,9 +6,10 @@ using MTManga.UWP.Enums;
 using MTManga.UWP.Services;
 using MTManga.UWP.Views;
 using System.Collections.ObjectModel;
+using Windows.UI.Xaml.Navigation;
 
 namespace MTManga.UWP.ViewModels {
-    public class IndexVM : ObservableObject {
+    public class IndexVM : ViewModelBase {
 
         private ObservableCollection<MangaEntity> _Mangas;
         private readonly IMangaCollectionService mangaCollectionService;
@@ -18,23 +19,24 @@ namespace MTManga.UWP.ViewModels {
             set { SetValue(ref _Mangas, value); }
         }
 
-        private object _SelectedManga;
-        public object SelectedManga {
+        private MangaEntity _SelectedManga;
+        public MangaEntity SelectedManga {
             get { return _SelectedManga; }
-            set { SetValue<object>(ref _SelectedManga, value); }
+            set {
+                if (value != null)
+                    ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].NavigateTo(nameof(MangaChapters), value);
+                SetValue(ref _SelectedManga, value);
+            }
         }
 
 
         public IndexVM(IMangaCollectionService mangaCollectionService) {
             this.mangaCollectionService = mangaCollectionService;
-            Load();
         }
 
         public async void Load() {
             Mangas = await mangaCollectionService.LoadMangasAsync();
         }
-
-
 
         public RelayCommand SelectCommand => new RelayCommand(OpenFiles);
 
@@ -47,9 +49,12 @@ namespace MTManga.UWP.ViewModels {
             Load();
         }
 
-        public RelayCommand<object> NavigateCommand => new RelayCommand<object>(A);
-        public void A(object e) {
-            ServiceLocator.Current.GetInstance<NavigationServiceList>()["ShellFrame"].NavigateTo(nameof(MangaChapters), e);
+        public override void OnNavigateTo(NavigationEventArgs e) {
+            Load();
         }
+
+        public override void OnNavigateFrom(NavigatedArgs e) {
+        }
+
     }
 }

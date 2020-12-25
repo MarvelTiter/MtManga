@@ -9,19 +9,12 @@
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <Page.Resources>
-        <cvt:IntBooleanConverter x:Key="IBC"/>
+        <IntBooleanConverter x:Key="IBC" xmlns="using:MTManga.UWP.Converters"/>
     </Page.Resources>
     <Grid>
         <GridView ItemsSource="{Binding Mangas}"
                   Name="gridView"
-                  SelectedItem="{Binding SelectedManga,Mode=OneWay}"
-                  IsItemClickEnabled="True">
-            <i:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="ItemClick">
-                    <core:InvokeCommandAction Command="{Binding NavigateCommand}"
-                                              CommandParameter="{Binding ElementName=gridView,Path=SelectedIndex}"/>
-                </core:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
+                  SelectedItem="{Binding SelectedManga,Mode=TwoWay}">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <GridViewItem>

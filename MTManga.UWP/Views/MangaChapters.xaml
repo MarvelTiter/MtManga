@@ -2,14 +2,29 @@
     x:Class="MTManga.UWP.Views.MangaChapters"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:MTManga.UWP.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource Locator},Path=Chapters}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Grid Margin="20 50 0 0">
-        <TextBlock>哈哈哈哈哈</TextBlock>
-        <Button Command="{Binding BackCommand}">Back</Button>
+    <Grid>
+        <Grid Margin="100 80 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding Model.Cover}"
+                   Width="200"></Image>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding Model.Title}"></TextBlock>
+                    <Button></Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
@@ -37,6 +38,17 @@ namespace MT.UWP.ControlLib {
 
         public static readonly DependencyProperty WindowStateIconProperty =
             DependencyProperty.Register(nameof(WindowStateIcon), typeof(string), typeof(AppTitleBar), new PropertyMetadata(FullScreen));
+
+
+
+        public ICommand BackCommand {
+            get { return (ICommand)GetValue(BackCommandProperty); }
+            set { SetValue(BackCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BackCommandProperty =
+            DependencyProperty.Register(nameof(BackCommand), typeof(ICommand), typeof(AppTitleBar), new PropertyMetadata(null));
 
 
 

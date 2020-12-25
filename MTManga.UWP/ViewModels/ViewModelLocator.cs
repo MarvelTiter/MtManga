@@ -1,6 +1,7 @@
 ﻿using CommonServiceLocator;
 using MT.MVVM.Core.Ioc;
 using MT.MVVM.Core.View;
+using MTManga.UWP.Enums;
 using MTManga.UWP.Services;
 using MTManga.UWP.Views;
 
@@ -29,12 +30,12 @@ namespace MTManga.UWP.ViewModels {
                 .RegisterScope<IMangaCollectionService, LocalMangaCollection>()
                 .RegisterScope<IMangaService, LocalManga>()
                 .RegisterScope<MangaChaptersVM>()
+                .RegisterSingle<ShellVM>(false)
                 .RegisterSingle(() => RegisterContentView())
                 .RegisterSingle(() => InitNavigation())
                 ;
             _instance = this;
         }
-
 
         public HomeVM Home => ServiceLocator.Current.GetInstance<HomeVM>();
 
@@ -44,28 +45,28 @@ namespace MTManga.UWP.ViewModels {
 
         public MangaReadVM Manga => ServiceLocator.Current.GetInstance<MangaReadVM>();
 
+        public ShellVM Shell => ServiceLocator.Current.GetInstance<ShellVM>();
 
-        private NavigationServiceList InitNavigation() {
-            var service = NavigationServiceList.Instance;
-            var shellNav = new NavigationService(ShellFrame);
+
+        private NavigationList InitNavigation() {
+            var service = NavigationList.Instance;
+            var shellNav = new NavigationService(Nav.ShellFrame);
             //
             shellNav.Configura<Home>();
             shellNav.Configura<MangaChapters>();
             shellNav.Configura<MangaRead>();
-            service.Register(ShellFrame, shellNav);
+            service.Register(Nav.ShellFrame, shellNav);
 
-            var thrNav = new NavigationService(IndexFrame);
+            var thrNav = new NavigationService(Nav.IndexFrame);
             thrNav.Configura<IndexView>();
             thrNav.Configura<Setting>();
-            service.Register(IndexFrame, thrNav);
+            service.Register(Nav.IndexFrame, thrNav);
 
             return service;
         }
 
         private ContentViewService RegisterContentView() {
             ContentViewService service = new ContentViewService();
-            service.Configura<IndexView>();
-            service.Configura<Setting>();
             return service;
         }
     }

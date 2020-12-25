@@ -21,8 +21,8 @@ namespace MT.MVVM.Core.View {
 
         }
 
-        public NavigationService(string customFrameName) {
-            this.customFrameName = customFrameName;
+        public NavigationService(Enum key) {
+            this.customFrameName = key.ToString();
         }
 
         private void FindFrameFromVisualTreeByName(DependencyObject parent) {

@@ -1,6 +1,7 @@
 ﻿using CommonServiceLocator;
 using MT.MVVM.Core;
 using MT.MVVM.Core.View;
+using MTManga.UWP.Enums;
 using MTManga.UWP.Views;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace MTManga.UWP.ViewModels {
             }
         }
 
-        public INavigationService Navigator => ServiceLocator.Current.GetInstance<NavigationServiceList>()[ViewModelLocator.IndexFrame];
+        public INavigationService Navigator => ServiceLocator.Current.GetInstance<NavigationList>()[Nav.IndexFrame];
 
         private SlideNavigationTransitionInfo CalcSlide(bool slide) {
             return new SlideNavigationTransitionInfo {

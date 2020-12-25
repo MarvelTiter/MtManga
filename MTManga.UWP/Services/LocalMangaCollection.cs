@@ -96,8 +96,6 @@ namespace MTManga.UWP.Services {
                     return null;
                 using (var randomAccess = await (cover as StorageFile).OpenAsync(FileAccessMode.Read)) {
                     BitmapImage bitmapImage = new BitmapImage();
-                    bitmapImage.DecodePixelWidth = 160;
-                    bitmapImage.DecodePixelHeight = 200;
                     if (randomAccess.Size > 0)
                         await bitmapImage.SetSourceAsync(randomAccess);
                     return bitmapImage;

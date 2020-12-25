@@ -1,6 +1,8 @@
 ﻿using CommonServiceLocator;
 using MT.MVVM.Core;
 using MT.MVVM.Core.View;
+using MTManga.UWP.Entities;
+using MTManga.UWP.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +12,16 @@ using Windows.UI.Xaml.Navigation;
 
 namespace MTManga.UWP.ViewModels {
     public class MangaChaptersVM : ViewModelBase {
-        //public INavigationService Navigator => ViewModelLocator.Current.NavigationService[ViewModelLocator.ShellFrame];
+        private MangaEntity _Model;
+        public MangaEntity Model {
+            get { return _Model; }
+            set { SetValue(ref _Model, value); }
+        }
 
-        public RelayCommand BackCommand => new RelayCommand(() => {
-            ServiceLocator.Current.GetInstance<NavigationServiceList>()["ShellFrame"].GoBack();
-        });
+
+        public override void OnNavigateTo(NavigationEventArgs e) {
+            Model = e.Parameter as MangaEntity;
+        }
+
     }
 }
