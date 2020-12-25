@@ -36,30 +36,43 @@ namespace MT.MVVM.Core.Ioc {
             }
         }
 
-        public void RegisterScope<T>() where T : class {
+        public IMIocContainter RegisterScope<T>() where T : class {
             Register<T>(false, false, null);
+            return this;
         }
 
-        public void RegisterScope<TI, T>()
+        public IMIocContainter RegisterScope(Type classType) {
+            Register(classType, false, false, null);
+            return this;
+        }
+
+        public IMIocContainter RegisterScope<TI, T>()
             where TI : class
             where T : class, TI {
             Register<TI, T>(false, false, null);
+            return this;
         }
-
-        public void RegisterSingle<T>(bool createImmediately, string key = null)
+        public IMIocContainter RegisterSingle(Type classType, bool createImmediately, string key = null) {
+            Register(classType, true, createImmediately, key);
+            return this;
+        }
+        public IMIocContainter RegisterSingle<T>(bool createImmediately, string key = null)
             where T : class {
             Register<T>(true, createImmediately, key);
+            return this;
         }
 
-        public void RegisterSingle<TI, T>(bool createImmediately, string key = null)
+        public IMIocContainter RegisterSingle<TI, T>(bool createImmediately, string key = null)
             where TI : class
             where T : class, TI {
             Register<TI, T>(true, createImmediately, key);
+            return this;
         }
 
-        public void RegisterSingle<T>(Func<T> factory, string key = null)
+        public IMIocContainter RegisterSingle<T>(Func<T> factory, string key = null)
             where T : class {
             Register<T>(true, true, key, factory);
+            return this;
         }
 
         public void UnRegister<T>(string key = null) {
@@ -202,7 +215,40 @@ namespace MT.MVVM.Core.Ioc {
                 }
             }
         }
+        private void Register(Type classType, bool single, bool createImmediately, string key) {
 
+            if (classType.IsInterface) {
+                throw new ArgumentException("An interface cannot be registered alone.");
+            }
+
+            lock (_syncLock) {
+                if (_factories.ContainsKey(classType)
+                    && _factories[classType].ContainsKey(_defaultKey)) {
+                    if (!_ctorInfos.ContainsKey(classType)) {
+                        throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                            "Class {0} is already registered.",
+                            classType));
+                    }
+                    return;
+                }
+
+                if (!_interfaceClassMapper.ContainsKey(classType)) {
+                    _interfaceClassMapper.Add(classType, null);
+                    _ctorInfos.Add(classType, GetConstructorInfo(classType));
+                }
+
+                Func<object> factory = () => MakeInstance(classType);
+
+                DoRegister(classType, factory, key ?? _defaultKey);
+
+                if (!_cacheType.ContainsKey(classType))
+                    _cacheType.Add(classType, single);
+
+                if (createImmediately) {
+                    CacheInstance(classType, key ?? _defaultKey);
+                }
+            }
+        }
         private T MakeInstance<T>() {
             var serviceType = typeof(T);
             var constructor = _ctorInfos.ContainsKey(serviceType)
@@ -223,7 +269,25 @@ namespace MT.MVVM.Core.Ioc {
 
             return (T)constructor.Invoke(parameters);
         }
+        private object MakeInstance(Type serviceType) {
+            var constructor = _ctorInfos.ContainsKey(serviceType)
+                                  ? _ctorInfos[serviceType]
+                                  : GetConstructorInfo(serviceType);
 
+            var parameterInfos = constructor.GetParameters();
+
+            if (parameterInfos.Length == 0) {
+                return constructor.Invoke(null);
+            }
+
+            var parameters = new object[parameterInfos.Length];
+
+            foreach (var parameterInfo in parameterInfos) {
+                parameters[parameterInfo.Position] = GetService(parameterInfo.ParameterType);
+            }
+
+            return constructor.Invoke(parameters);
+        }
         private ConstructorInfo GetConstructorInfo(Type serviceType) {
             Type resolveTo;
 

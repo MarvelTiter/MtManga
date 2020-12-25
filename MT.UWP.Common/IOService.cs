@@ -74,7 +74,7 @@ namespace MT.UWP.Common {
             return folder;
         }
 
-        public string SaveFolder(StorageFolder folder) {
+        public string SaveFolder(StorageFolder folder) {         
             var token = StorageApplicationPermissions.FutureAccessList.Add(folder);
             return token;
         }

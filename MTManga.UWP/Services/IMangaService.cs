@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MT.MVVM.Core {
-   
+namespace MTManga.UWP.Services {
+    public interface IMangaService {
+        void LoadChapters();
+    }
 }

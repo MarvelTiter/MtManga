@@ -25,26 +25,30 @@ namespace MT.MVVM.Core.View {
             this.customFrameName = customFrameName;
         }
 
-        private Frame FindFrameFromVisualTreeByName(DependencyObject parent) {
-            var count = VisualTreeHelper.GetChildrenCount(parent);
+        private void FindFrameFromVisualTreeByName(DependencyObject parent) {
+            DependencyObject root;
+            if (parent is Frame f) {
+                if (f.Name == customFrameName) {
+                    _currentFrame = f;
+                    return;
+                }
+                root = f.Content as FrameworkElement;
+            } else
+                root = parent;
+            var count = VisualTreeHelper.GetChildrenCount(root);
             if (count == 0) {
-                return null;
+                return;
             }
             for (var i = 0; i < count; i++) {
-                var fe = VisualTreeHelper.GetChild(parent, i) as FrameworkElement;
+                var fe = VisualTreeHelper.GetChild(root, i) as FrameworkElement;
                 if (fe is Frame frame) {
                     if (frame.Name == customFrameName) {
-                        return frame;
-                    }
-                } else {
-                    fe = FindFrameFromVisualTreeByName(fe);
-                    if (fe != null) {
-                        return fe as Frame;
+                        _currentFrame = frame;
+                        return;
                     }
                 }
-
+                FindFrameFromVisualTreeByName(fe);
             }
-            return null;
         }
 
         public string CurrentPageKey {
@@ -73,7 +77,7 @@ namespace MT.MVVM.Core.View {
         public Frame CurrentFrame {
             get {
                 if (_currentFrame == null) {
-                    _currentFrame = FindFrameFromVisualTreeByName(Window.Current.Content);
+                    FindFrameFromVisualTreeByName(Window.Current.Content);
                     RegisterFrameEvents();
                 }
                 return _currentFrame;
@@ -113,18 +117,18 @@ namespace MT.MVVM.Core.View {
             }
         }
 
-        public bool NavigateTo(string pageKey, NavigationTransitionInfo infoOverride = null) {
-            return NavigateTo(pageKey, null, infoOverride);
+        public bool NavigateTo(string pageKey, NavigationTransitionInfo transInfo = null) {
+            return NavigateTo(pageKey, null, transInfo);
         }
 
-        public bool NavigateTo(string pageKey, object parameter, NavigationTransitionInfo infoOverride = null) {
+        public bool NavigateTo(string pageKey, object parameter, NavigationTransitionInfo transInfo = null) {
             lock (_pagesByKey) {
                 if (!_pagesByKey.ContainsKey(pageKey)) {
                     throw new ArgumentException($"No such page: {pageKey}.", "pageKey");
                 }
                 var currentPage = CurrentFrame.Content as Page;
-                var b = CurrentFrame.Navigate(_pagesByKey[pageKey], parameter, infoOverride);
-                if (b && currentPage is INavigable nav) {
+                var b = CurrentFrame.Navigate(_pagesByKey[pageKey], parameter, transInfo);
+                if (b && currentPage?.DataContext is INavigable nav) {
                     nav.OnNavigateFrom(new NavigatedArgs {
                         Content = CurrentFrame.Content,
                         NavigationMode = NavigationMode.New
@@ -132,6 +136,12 @@ namespace MT.MVVM.Core.View {
                 }
                 return b;
             }
+        }
+
+        public void Configura<T>() {
+            var type = typeof(T);
+            var key = type.Name;
+            Configura(key, type);
         }
 
         public void Configura(string key, Type pageType) {
@@ -171,13 +181,13 @@ namespace MT.MVVM.Core.View {
 
         private void Frame_Navigating(object sender, NavigatingCancelEventArgs e) {
             var currentPage = CurrentFrame.Content as Page;
-            if (currentPage is INavigable nav)
+            if (currentPage?.DataContext is INavigable nav)
                 nav.OnNavigatingFrom(e);
         }
 
         private void Frame_Navigated(object sender, NavigationEventArgs e) {
             var destPage = e.Content as Page;
-            if (destPage is INavigable nav)
+            if (destPage?.DataContext is INavigable nav)
                 nav.OnNavigateTo(e);
             Navigated?.Invoke(sender, e);
         }

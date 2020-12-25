@@ -21,7 +21,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Frame Grid.RowSpan="2" x:Name="rootFrame"></Frame>
+        <Frame Grid.RowSpan="2" x:Name="ShellFrame"></Frame>
         <mclib:AppTitleBar></mclib:AppTitleBar>
     </Grid>
 </Page>

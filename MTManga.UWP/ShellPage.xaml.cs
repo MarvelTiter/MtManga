@@ -1,17 +1,7 @@
-﻿using MTManga.UWP.Pages;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿using CommonServiceLocator;
+using MT.MVVM.Core.View;
+using MTManga.UWP.Views;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -26,7 +16,9 @@ namespace MTManga.UWP {
         }
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
-            rootFrame.Navigate(typeof(Home));
+            //ShellFrame.Navigate(typeof(Home));
+            var navtor = ServiceLocator.Current.GetInstance<NavigationServiceList>();
+            navtor["ShellFrame"].NavigateTo(nameof(Home));
         }
     }
 }
