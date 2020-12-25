@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace MT.MVVM.Core {
     public class ViewModelBase : ObservableObject, INavigable {
+
         public virtual void OnNavigateFrom(NavigatedArgs e) {
         }
 

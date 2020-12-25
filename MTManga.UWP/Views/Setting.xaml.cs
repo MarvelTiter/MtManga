@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Navigation;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace MTManga.UWP.Views {
-    public sealed partial class Setting : UserControl {
+    public sealed partial class Setting : Page {
 
         public Setting() {
             this.InitializeComponent();
@@ -26,11 +26,11 @@ namespace MTManga.UWP.Views {
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {
-           
+
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e) {
-            
+
         }
 
 

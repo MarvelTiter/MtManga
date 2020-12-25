@@ -17,9 +17,9 @@ namespace MT.MVVM.Core.View {
 
         void GoForward();
 
-        bool NavigateTo(string pageKey, NavigationTransitionInfo infoOverride = null);
+        bool NavigateTo(string pageKey, NavigationTransitionInfo transInfo = null);
 
-        bool NavigateTo(string pageKey, object parameter, NavigationTransitionInfo infoOverride = null);
+        bool NavigateTo(string pageKey, object parameter, NavigationTransitionInfo transInfo = null);
 
     }
 }

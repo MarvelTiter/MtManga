@@ -41,6 +41,14 @@ namespace Core.Test {
 
             Assert.IsTrue(ins3.Count == 1);
         }
+
+        [TestMethod]
+        public void TestRegisterType() {
+            MIoC.Default.RegisterScope(typeof(Test1));
+            var ins1 = MIoC.Default.GetInstance(typeof(Test1));
+            var ins2 = MIoC.Default.GetInstance(typeof(Test1));
+            Assert.AreNotSame(ins1, ins2);
+        }
     }
 
     public interface ITest1 {
