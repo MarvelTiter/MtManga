@@ -23,9 +23,13 @@ namespace MTManga.UWP.ViewModels {
         public MangaEntity SelectedManga {
             get { return _SelectedManga; }
             set {
-                if (value != null)
-                    ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].NavigateTo(nameof(MangaChapters), value);
                 SetValue(ref _SelectedManga, value);
+                if (value == null)
+                    return;
+                if (value.Info.FileType == ItemType.List)
+                    ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].NavigateTo(nameof(MangaChapters), value);
+                else
+                    ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].NavigateTo(nameof(MangaRead), value);
             }
         }
 

@@ -11,8 +11,24 @@ using Windows.Storage.Search;
 namespace MT.UWP.Common.Extension {
     public static class FolderExtension {     
         public static async Task<IReadOnlyList<IStorageItem>> GetLocalItemInFolderAsync(this StorageFolder self, params string[] types) {
-            QueryOptions itemQuery = new QueryOptions();
+            QueryOptions itemQuery = FileExtensionQuery(types);
             //itemQuery.SortOrder.Add(new SortEntry { PropertyName = "System.FileName", AscendingOrder = true });
+           
+            //itemQuery.ApplicationSearchFilter = "新建";
+            var queryResult = self.CreateItemQueryWithOptions(itemQuery);
+            var storageItems = await queryResult.GetItemsAsync();
+            return storageItems;
+        }
+
+        public static async Task<int> GetFolderFileCount(this StorageFolder self, params string[] types) {
+            QueryOptions itemQuery = FileExtensionQuery(types);
+            var queryResult = self.CreateItemQueryWithOptions(itemQuery);
+            var count = await queryResult.GetItemCountAsync();
+            return (int)count;
+        }
+
+        private static QueryOptions FileExtensionQuery(string[] types) {
+            QueryOptions itemQuery = new QueryOptions();
             Regex typeReg = new Regex(@"^\.[\w]+$");
             if (types.Length == 0)
                 itemQuery.FileTypeFilter.Add("*");
@@ -23,18 +39,8 @@ namespace MT.UWP.Common.Extension {
                     else
                         throw new InvalidCastException("文件后缀名不正确");
                 }
-            //itemQuery.ApplicationSearchFilter = "新建";
-            var queryResult = self.CreateItemQueryWithOptions(itemQuery);
-            var storageItems = await queryResult.GetItemsAsync();
-            return storageItems;
-        }
 
-        public static async Task<int> GetFolderFileCount(this StorageFolder self) {
-            QueryOptions itemQuery = new QueryOptions();
-            itemQuery.FileTypeFilter.Add("*");
-            var queryResult = self.CreateItemQueryWithOptions(itemQuery);
-            var count = await queryResult.GetItemCountAsync();
-            return (int)count;
+            return itemQuery;
         }
 
         public static StorageFolder Folder(this IStorageItem self) {
@@ -43,6 +49,14 @@ namespace MT.UWP.Common.Extension {
 
         public static StorageFile File(this IStorageItem self) {
             return self as StorageFile;
+        }
+
+        public static async Task<IStorageItem> GetFirstItem(this StorageFolder self) {
+            QueryOptions itemQuery = new QueryOptions();
+            itemQuery.FileTypeFilter.Add("*");
+            var queryResult = self.CreateItemQueryWithOptions(itemQuery);
+            var result = await queryResult.GetItemsAsync(0, 1);
+            return result.FirstOrDefault();
         }
     }
 }

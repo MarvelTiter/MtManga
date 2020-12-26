@@ -7,7 +7,11 @@
     >
     <Application.Resources>
         <ResourceDictionary>
+            <model:AppConfig x:Key="Config"/>
             <vm:ViewModelLocator x:Key="Locator"/>
+            <Style TargetType="Frame">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
             </ResourceDictionary.MergedDictionaries>

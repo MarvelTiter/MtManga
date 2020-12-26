@@ -123,10 +123,10 @@
     <Compile Include="Converters\IntBooleanConverter.cs" />
     <Compile Include="Entities\MangaEntity.cs" />
     <Compile Include="Enums\ConfigEnum.cs" />
+    <Compile Include="Enums\ItemType.cs" />
     <Compile Include="Enums\Nav.cs" />
     <Compile Include="Extention\StreamExtension.cs" />
     <Compile Include="Models\AppConfig.cs" />
-    <Compile Include="Models\AppConfigHelper.cs" />
     <Compile Include="ViewModels\ShellVM.cs" />
     <Compile Include="Views\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>

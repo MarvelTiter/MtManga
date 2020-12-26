@@ -31,6 +31,7 @@ namespace MTManga.UWP.ViewModels {
                 .RegisterScope<IMangaService, LocalManga>()
                 .RegisterScope<MangaChaptersVM>()
                 .RegisterSingle<ShellVM>(false)
+                .RegisterScope<MangaReadVM>()
                 .RegisterSingle(() => RegisterContentView())
                 .RegisterSingle(() => InitNavigation())
                 ;
@@ -46,7 +47,6 @@ namespace MTManga.UWP.ViewModels {
         public MangaReadVM Manga => ServiceLocator.Current.GetInstance<MangaReadVM>();
 
         public ShellVM Shell => ServiceLocator.Current.GetInstance<ShellVM>();
-
 
         private NavigationList InitNavigation() {
             var service = NavigationList.Instance;

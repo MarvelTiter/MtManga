@@ -66,6 +66,7 @@ namespace MTManga.UWP.ViewModels {
         public override void OnNavigateTo(NavigationEventArgs e) {
             CurrentIndex = 0;
         }
+
     }
 
     public class MenuModel {

@@ -27,11 +27,11 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Image Source="{Binding Cover}"></Image>
-                            <TextBlock Grid.Row="1" Text="{Binding Title}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 10"/>
+                            <TextBlock Grid.Row="1" Text="{Binding Info.Title}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 10"/>
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Foreground="#909399" Margin="0 0 0 10">
-                            <Run Text="{Binding Current}"></Run>
+                            <Run Text="{Binding Info.Current}"></Run>
                             <Run Text=" / "></Run>
-                            <Run Text="{Binding Total}"></Run>
+                            <Run Text="{Binding Info.Total}"></Run>
                             </TextBlock>
                         </Grid>
                     </GridViewItem>

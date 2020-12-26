@@ -8,7 +8,7 @@
     xmlns:mclib="using:MT.UWP.ControlLib"    
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource Locator},Path=Shell}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="Transparent">
     <!--<Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
@@ -23,6 +23,8 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Frame Grid.RowSpan="2" x:Name="ShellFrame"></Frame>
-        <mclib:AppTitleBar BackCommand="{Binding ShellBackCommand}"></mclib:AppTitleBar>
+        <mclib:AppTitleBar BackCommand="{Binding ShellBackCommand}"
+                           HideInFullScreen="{Binding Source={StaticResource Config},Path=IsHideTitleBarButtonInFullScreen}"
+                           ></mclib:AppTitleBar>
     </Grid>
 </Page>

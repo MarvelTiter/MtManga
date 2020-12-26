@@ -58,8 +58,16 @@ namespace MT.UWP.ControlLib {
         }
 
         public static readonly DependencyProperty HideInFullScreenProperty =
-            DependencyProperty.Register(nameof(HideInFullScreen), typeof(bool), typeof(AppTitleBar), new PropertyMetadata(false));
+            DependencyProperty.Register(nameof(HideInFullScreen), typeof(bool), typeof(AppTitleBar), new PropertyMetadata(false, OnHideInFullScreenChanged));
 
+        private static async void OnHideInFullScreenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            var titleBar = d as AppTitleBar;
+            await titleBar.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                titleBar.AppTitleCustomButtonBar.Visibility = titleBar.HideInFullScreen && titleBar.IsFullScreenMode ? Visibility.Collapsed : Visibility.Visible;
+            });
+        }
+
+        public bool IsFullScreenMode => _appView.IsFullScreenMode;
 
 
         public AppTitleBar() {
@@ -91,7 +99,6 @@ namespace MT.UWP.ControlLib {
             LayoutRoot.Height = _coreTitleBar.Height;
             SetTitleBarControlColors();
 
-            SetTitleBarVisibility();
             SetTitleBarPadding();
         }
 
@@ -105,10 +112,6 @@ namespace MT.UWP.ControlLib {
             _appView.VisibleBoundsChanged -= OnVisibleBoundsChanged;
         }
 
-
-        private void SetTitleBarVisibility() {
-            LayoutRoot.Visibility = (_appView.IsFullScreenMode && HideInFullScreen) ? Visibility.Collapsed : Visibility.Visible;
-        }
 
         private void SetTitleBarPadding() {
             double leftAddition = 0;
@@ -126,7 +129,7 @@ namespace MT.UWP.ControlLib {
         }
 
         private void OnIsVisibleChanged(CoreApplicationViewTitleBar sender, object args) {
-            SetTitleBarVisibility();
+
         }
 
         private void OnLayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) {
@@ -158,7 +161,7 @@ namespace MT.UWP.ControlLib {
                 applicationTitleBar.ButtonPressedForegroundColor = null;
             } else {
                 Color bgColor = Colors.Transparent;
-               
+
                 Color fgColor = ((SolidColorBrush)Resources["ButtonForegroundColor"]).Color;
                 Color inactivefgColor = ((SolidColorBrush)Resources["ButtonInactiveForegroundBrush"]).Color;
                 Color hoverbgColor = ((SolidColorBrush)Resources["ButtonHoverBackgroundBrush"]).Color;
@@ -179,7 +182,6 @@ namespace MT.UWP.ControlLib {
         private async void OnHighContrastChanged(AccessibilitySettings sender, Object args) {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                 SetTitleBarControlColors();
-                SetTitleBarVisibility();
             });
         }
 
@@ -196,13 +198,12 @@ namespace MT.UWP.ControlLib {
         }
 
         private void OnVisibleBoundsChanged(ApplicationView sender, object args) {
-            SetTitleBarVisibility();
+            AppTitleCustomButtonBar.Visibility = HideInFullScreen && IsFullScreenMode ? Visibility.Collapsed : Visibility.Visible;
             SetButtonIcon();
         }
 
         private void SetButtonIcon() {
-            bool isInFullScreenMode = _appView.IsFullScreenMode;
-            if (isInFullScreenMode) {
+            if (IsFullScreenMode) {
                 SetValue(WindowStateIconProperty, BackToWindow);
             } else {
                 SetValue(WindowStateIconProperty, FullScreen);
@@ -210,9 +211,7 @@ namespace MT.UWP.ControlLib {
         }
 
         private void btnFullScreen_Click(object sender, RoutedEventArgs e) {
-            bool isInFullScreenMode = _appView.IsFullScreenMode;
-
-            if (isInFullScreenMode) {
+            if (IsFullScreenMode) {
                 _appView.ExitFullScreenMode();
             } else {
                 _appView.TryEnterFullScreenMode();

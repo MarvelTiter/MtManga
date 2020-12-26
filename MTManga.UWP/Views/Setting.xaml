@@ -13,6 +13,6 @@
             <Button Click="Button_Click">保存</Button>
             <Button Click="Button_Click_1">读取</Button>
         </StackPanel>
-        <CheckBox>全屏时隐藏标题按钮</CheckBox>
+        <CheckBox IsChecked="{Binding Source={StaticResource Config},Path=IsHideTitleBarButtonInFullScreen,Mode=TwoWay}">全屏时隐藏标题按钮</CheckBox>
     </StackPanel>
 </Page>

@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTManga.UWP.Enums {
-    public enum ConfigEnum {
-        RootFolderToken,
-        IsHideTitleBarButtonInFullScreen,
-        PageMode,
-        Direction,
-        PageCount,
+    public enum ItemType {
+        UnSet,
+        ZipManga,
+        FolderManga,
+        List,
     }
 }

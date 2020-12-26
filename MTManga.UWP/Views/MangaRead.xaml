@@ -4,11 +4,56 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mclib="using:MT.UWP.ControlLib"
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource Locator},Path=Manga}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Grid>
-
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="100" />
+            <Setter Property="Margin" Value="0,100" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+    </Page.Resources>
+    <Grid Background="Transparent">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="Visible" GeneratedDuration="00:00:00.3000000" To="Hidden">
+                        <Storyboard>
+                            <DoubleAnimation Duration="00:00:00" Storyboard.TargetName="acrylicMask" Storyboard.TargetProperty="(UIElement.Opacity)" To="0"/>
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="Hidden" GeneratedDuration="00:00:00.3000000" To="Visible"/>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="Visible"/>
+                <VisualState x:Name="Hidden">
+                    <VisualState.Setters>
+                        <Setter Target="acrylicMask.(UIElement.Opacity)" Value="0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Image HorizontalAlignment="Right" Source="{Binding Left}"></Image>
+            <Button HorizontalAlignment="Left" Command="{Binding LeftCommand}"></Button>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Image HorizontalAlignment="Left" Source="{Binding Right}"/>
+            <Button HorizontalAlignment="Right" Command="{Binding RightCommand}"></Button>
+        </Grid>
+        <mclib:AcrylicMask x:Name="acrylicMask" Grid.ColumnSpan="2">
+            <mclib:AcrylicMask.TopArea>
+                <StackPanel Orientation="Horizontal">
+                    <Button>哈哈</Button>
+                    <Button>哈哈</Button>
+                    <Button>哈哈</Button>
+                </StackPanel>
+            </mclib:AcrylicMask.TopArea>
+        </mclib:AcrylicMask>
     </Grid>
 </Page>

@@ -47,7 +47,8 @@ namespace MT.UWP.Common {
 
         public async Task<T> GetLocalDataAsync<T>(string fileName, string defaultValue = "[]") {
             try {
-                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appdata:///local/" + fileName));
+                //var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appdata:///local/" + fileName));
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
                 string content = await FileIO.ReadTextAsync(file);
                 if (string.IsNullOrEmpty(content))
                     content = defaultValue;
@@ -57,9 +58,10 @@ namespace MT.UWP.Common {
             }
         }
 
-        public async Task SetLocalDataAsync(string fileName, string content) {
+        public async Task SetLocalDataAsync(string fileName, object content) {
             var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-            await FileIO.WriteTextAsync(file, content);
+            var contentString = jsonConvertService.SerializeObject(content);
+            await FileIO.WriteTextAsync(file, contentString);
         }
 
         public async Task<StorageFolder> GetUserFolderAsync(string token = null) {
