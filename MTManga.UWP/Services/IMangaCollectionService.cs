@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace MTManga.UWP.Services {
     public interface IMangaCollectionService {
+        object DataCore { get; set; }
         Task<ObservableCollection<MangaEntity>> LoadMangasAsync();
     }
 }

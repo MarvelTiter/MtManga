@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
-namespace MTManga.UWP.Converters {
+namespace MT.UWP.ControlLib.Converters {
     public abstract class BaseConverter:IValueConverter {
         public abstract object Convert(object value, Type targetType, object parameter, string language);
 

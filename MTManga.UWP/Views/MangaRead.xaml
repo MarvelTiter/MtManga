@@ -6,54 +6,45 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mclib="using:MT.UWP.ControlLib"
     mc:Ignorable="d"
-    DataContext="{Binding Source={StaticResource Locator},Path=Manga}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    xmlns:local="using:MTManga.UWP.Controls"
+    xmlns:cc="using:MT.UWP.ControlLib.Converters"
+    xmlns:localcc="using:MTManga.UWP.Converters"
+    DataContext="{Binding Source={StaticResource Locator},Path=Manga}">
     <Page.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Width" Value="100" />
-            <Setter Property="Margin" Value="0,100" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-        </Style>
+        <cc:IntToBooleanConverter x:Key="IBC"/>
+        <localcc:LabelConverter x:Key="LC"/>
     </Page.Resources>
-    <Grid Background="Transparent">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="VisualStateGroup">
-                <VisualStateGroup.Transitions>
-                    <VisualTransition From="Visible" GeneratedDuration="00:00:00.3000000" To="Hidden">
-                        <Storyboard>
-                            <DoubleAnimation Duration="00:00:00" Storyboard.TargetName="acrylicMask" Storyboard.TargetProperty="(UIElement.Opacity)" To="0"/>
-                        </Storyboard>
-                    </VisualTransition>
-                    <VisualTransition From="Hidden" GeneratedDuration="00:00:00.3000000" To="Visible"/>
-                </VisualStateGroup.Transitions>
-                <VisualState x:Name="Visible"/>
-                <VisualState x:Name="Hidden">
-                    <VisualState.Setters>
-                        <Setter Target="acrylicMask.(UIElement.Opacity)" Value="0"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Image HorizontalAlignment="Right" Source="{Binding Left}"></Image>
-            <Button HorizontalAlignment="Left" Command="{Binding LeftCommand}"></Button>
-        </Grid>
-        <Grid Grid.Column="1">
-            <Image HorizontalAlignment="Left" Source="{Binding Right}"/>
-            <Button HorizontalAlignment="Right" Command="{Binding RightCommand}"></Button>
-        </Grid>
-        <mclib:AcrylicMask x:Name="acrylicMask" Grid.ColumnSpan="2">
+    <Grid Background="#00000000">
+        <local:ImageViewer Left="{Binding Left}" 
+                           Right="{Binding Right}"
+                           SingleMode="{Binding Source={StaticResource Config},Path=PageCount,Converter={StaticResource IBC}}"
+                           LeftCommand="{Binding LeftCommand}"
+                           RightCommand="{Binding RightCommand}"></local:ImageViewer>
+        <Button Width="400" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Style="{StaticResource HiddenButton}" Command="{Binding ShowCommand}">
+        </Button>
+        <mclib:AcrylicMask x:Name="acrylicMask" Show="{Binding ShowSetting, Mode=TwoWay}">
             <mclib:AcrylicMask.TopArea>
-                <StackPanel Orientation="Horizontal">
-                    <Button>哈哈</Button>
-                    <Button>哈哈</Button>
-                    <Button>哈哈</Button>
+                <StackPanel Margin="50 100 0 50"
+                            HorizontalAlignment="Left"
+                            Background="Transparent"
+                            Orientation="Horizontal">
+                    <AppBarButton Icon="Page" Foreground="White"
+                                  Style="{ThemeResource AppBarButtonRevealStyle}"
+                                  Label="{Binding Source={StaticResource Config},Path=PageCount,Converter={StaticResource LC}}" 
+                                  Command="{Binding Source={StaticResource Config},Path=UpdatePageCountCommand}"></AppBarButton>
+                    <AppBarButton Icon="TwoPage" Label="合页模式"
+                                  Style="{ThemeResource AppBarButtonRevealStyle}"
+                                  Command="{Binding Source={StaticResource Config},Path=UpdatePageModeCommand}"></AppBarButton>
+                    <AppBarButton Icon="Switch" Label="翻页方向" 
+                                  Style="{ThemeResource AppBarButtonRevealStyle}"
+                                  Command="{Binding Source={StaticResource Config},Path=UpdateDirectionCommand}"></AppBarButton>
+                    <AppBarButton Icon="Repair" Label="修复合页" 
+                                  Style="{ThemeResource AppBarButtonRevealStyle}"
+                                  Command="{Binding Source={StaticResource Config},Path=UpdateRepairedPageModeCommand}"></AppBarButton>
                 </StackPanel>
             </mclib:AcrylicMask.TopArea>
         </mclib:AcrylicMask>
+        
     </Grid>
 </Page>

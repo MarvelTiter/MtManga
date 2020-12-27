@@ -5,14 +5,32 @@
     xmlns:local="using:MTManga.UWP.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    DataContext="{Binding Source={StaticResource Locator},Path=Setting}"
     mc:Ignorable="d">
-
-    <StackPanel>
-        <TextBlock Text="设置"/>
-        <StackPanel Orientation="Horizontal">
-            <Button Click="Button_Click">保存</Button>
-            <Button Click="Button_Click_1">读取</Button>
+    <Grid>
+        <StackPanel Margin="30 20 0 0">
+            <StackPanel.Resources>
+                <Style TargetType="Grid">
+                    <Setter Property="Margin" Value="0 10" />
+                </Style>
+            </StackPanel.Resources>
+            <Grid>
+                <CheckBox IsChecked="{Binding Source={StaticResource Config},Path=IsHideTitleBarButtonInFullScreen,Mode=TwoWay}">全屏时隐藏标题按钮</CheckBox>
+            </Grid>
+            <Grid>
+                <StackPanel>
+                    <TextBlock>章节列表分页大小</TextBlock>
+                    <TextBox Text="{Binding Source={StaticResource Config},Path=GroupSize,Mode=TwoWay}" 
+                             HorizontalAlignment="Left"
+                             Width="100"></TextBox>
+                </StackPanel>
+            </Grid>
+            <Grid>
+                <Button Command="{Binding ClearCommand}">清空设置</Button>
+            </Grid>
+            <Grid>
+                <Button Command="{Binding PickFolderCommand}">选择根目录</Button>
+            </Grid>
         </StackPanel>
-        <CheckBox IsChecked="{Binding Source={StaticResource Config},Path=IsHideTitleBarButtonInFullScreen,Mode=TwoWay}">全屏时隐藏标题按钮</CheckBox>
-    </StackPanel>
+    </Grid>
 </Page>

@@ -124,6 +124,10 @@
       <DependentUpon>AppTitleBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="AcrylicMask.cs" />
+    <Compile Include="Converters\BaseConverter.cs" />
+    <Compile Include="Converters\HeightConverter.cs" />
+    <Compile Include="Converters\IntToBooleanConverter.cs" />
+    <Compile Include="Converters\IntVisibilityConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\MT.UWP.ControlLib.rd.xml" />
   </ItemGroup>

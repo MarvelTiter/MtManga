@@ -16,15 +16,33 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace MTManga.UWP.Services {
     public class LocalMangaCollection : IMangaCollectionService {
-        public StorageFolder RootFolder { get; set; }
-
+        public object DataCore { get; set; }
+        private StorageFolder _folder;
+        private string saveName;
+        private MangaEntity _entity;
+        private uint groupId {
+            get {
+                var i = _entity?.Info.Group;
+                return i.HasValue ? (uint)i.Value : 0;
+            }
+        }
+        private uint groupSize {
+            get {
+                var i = _entity?.Info.GroupSize;
+                return i.HasValue ? (uint)i.Value : 0;
+            }
+        }
         public async Task<ObservableCollection<MangaEntity>> LoadMangasAsync() {
             InitFolder();
             var Mangas = new ObservableCollection<MangaEntity>();
-            if (RootFolder == null)
+            if (_folder == null)
                 return Mangas;
-            var infos = await App.Helper.IO.GetLocalDataAsync<List<MangaInfo>>("MangaInfo");
-            var items = await RootFolder.GetLocalItemInFolderAsync(".zip");
+            var infos = await App.Helper.IO.GetLocalDataAsync<List<MangaInfo>>(saveName);
+            IReadOnlyList<IStorageItem> items = null;
+            if (groupId >= 0 && groupSize > 0)
+                items = await _folder.GetLocalItemInFolderAsync(groupId, groupSize, ".zip");
+            else
+                items = await _folder.GetLocalItemInFolderAsync(".zip");
             foreach (var item in items) {
                 var info = infos.FirstOrDefault(i => i.Title == item.Name);
                 if (info == null) {
@@ -38,15 +56,19 @@ namespace MTManga.UWP.Services {
                 await InitManga(mangaEntity);
                 Mangas.Add(mangaEntity);
             }
-            await App.Helper.IO.SetLocalDataAsync("MangaInfo", infos);
+            await App.Helper.IO.SetLocalDataAsync(saveName, infos);
             return Mangas;
         }
 
-
         private async void InitFolder() {
-            if (App.Helper.Setting.GetLocalSetting(ConfigEnum.RootFolderToken, out string temp)) {
+            if (DataCore != null) {
+                _entity = DataCore as MangaEntity;
+                _folder = _entity.StorageItem.Folder();
+                saveName = _entity.Info.SavedName + _entity.Info.Group;
+            } else if (App.Helper.Setting.GetLocalSetting(ConfigEnum.RootFolderToken, out string temp)) {
                 var folder = await App.Helper.IO.GetUserFolderAsync(temp);
-                RootFolder = folder;
+                _folder = folder;
+                saveName = _folder.Name;
             }
         }
 
@@ -57,23 +79,35 @@ namespace MTManga.UWP.Services {
             if (mangaEntity.Info.FileType == ItemType.UnSet) {
                 if (mangaEntity.StorageItem.IsOfType(StorageItemTypes.File)) { // zip 文件
                     mangaEntity.Info.FileType = ItemType.ZipManga;
-                } else { // 文件夹   
+                    mangaEntity.Info.SavedName = saveName;
+                } else { // 文件夹
                     var folder = mangaEntity.StorageItem.Folder();
                     var first = await folder.GetFirstItem();
-                    mangaEntity.Info.FileType = first.File()?.FileType == ".zip" ? ItemType.List : ItemType.FolderManga;
+                    if (first.IsOfType(StorageItemTypes.Folder) || first.File()?.FileType == ".zip") {
+                        mangaEntity.Info.FileType = ItemType.List;
+                        mangaEntity.Info.SavedName = folder.Name;
+                    } else {
+                        mangaEntity.Info.FileType = ItemType.FolderManga;
+                        mangaEntity.Info.SavedName = saveName;
+                    }
                 }
             }
             // 获取总数
             if (mangaEntity.Info.Total == 0) {
-                var r = await GetItemCount(mangaEntity.StorageItem);
+                var r = await GetItemCount(mangaEntity);
                 mangaEntity.Info.Offset = r[0];
                 mangaEntity.Info.Total = r[1];
             }
         }
 
-        private async Task<int[]> GetItemCount(IStorageItem item) {
+        private async Task<int[]> GetItemCount(MangaEntity e) {
+            var item = e.StorageItem;
             if (item.IsOfType(StorageItemTypes.Folder)) {
-                var total = await item.Folder().GetFolderFileCount(".jpg", ".png");
+                var total = 0;
+                if (e.Info.FileType == ItemType.FolderManga)
+                    total = await item.Folder().GetFolderFileCount(".jpg", ".png");
+                else
+                    total = await item.Folder().GetFolderFileCount(".zip");
                 return new int[] { 0, total };
             } else {
                 var offset = 0;
@@ -99,9 +133,13 @@ namespace MTManga.UWP.Services {
                         }
                     } finally {
                         zipArchive?.Dispose();
+                        zipArchive = null;
                         randomAccess?.Dispose();
+                        randomAccess = null;
                         fileStream?.Dispose();
+                        fileStream = null;
                         mem?.Dispose();
+                        mem = null;
                     }
                 }
                 return new int[] { offset, total };
@@ -120,9 +158,9 @@ namespace MTManga.UWP.Services {
         private async Task<BitmapImage> HandleFile(IStorageItem item) {
             var file = item.File();
             if (file.FileType == ".zip") {
-                var fileStream = await file.OpenReadAsync();
+                var fileStream = await file.OpenStreamForReadAsync();
                 IRandomAccessStream randomAccess = null;
-                var zipArchive = new ZipArchive(fileStream.AsStream());
+                var zipArchive = new ZipArchive(fileStream);
                 MemoryStream mem = null;
                 try {
                     foreach (var entry in zipArchive.Entries) {
@@ -136,9 +174,14 @@ namespace MTManga.UWP.Services {
                     }
                 } finally {
                     zipArchive?.Dispose();
+                    zipArchive = null;
                     randomAccess?.Dispose();
+                    randomAccess = null;
                     fileStream?.Dispose();
+                    fileStream = null;
                     mem?.Dispose();
+                    mem = null;
+                    GC.Collect();
                 }
             } else {
                 using (var randomAccess = await (item as StorageFile).OpenAsync(FileAccessMode.Read)) {

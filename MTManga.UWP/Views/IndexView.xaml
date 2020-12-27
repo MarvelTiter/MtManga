@@ -9,11 +9,11 @@
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <Page.Resources>
-        <IntBooleanConverter x:Key="IBC" xmlns="using:MTManga.UWP.Converters"/>
+        <IntVisibilityConverter x:Key="IBC" xmlns="using:MTManga.UWP.Converters"/>
     </Page.Resources>
-    <Grid>
+    <Grid Background="#00000000">
         <GridView ItemsSource="{Binding Mangas}"
-                  Name="gridView"
+                  Name="gridView"                  
                   SelectedItem="{Binding SelectedManga,Mode=TwoWay}">
             <GridView.ItemTemplate>
                 <DataTemplate>
@@ -27,11 +27,15 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Image Source="{Binding Cover}"></Image>
-                            <TextBlock Grid.Row="1" Text="{Binding Info.Title}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 10"/>
-                            <TextBlock Grid.Row="2" HorizontalAlignment="Center" Foreground="#909399" Margin="0 0 0 10">
-                            <Run Text="{Binding Info.Current}"></Run>
-                            <Run Text=" / "></Run>
-                            <Run Text="{Binding Info.Total}"></Run>
+                            <TextBlock Grid.Row="1" Text="{Binding Info.Title}" 
+                                       FontWeight="Bold" HorizontalAlignment="Center" Margin="0 10"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="2" HorizontalAlignment="Center" 
+                                       Foreground="{ThemeResource ApplicationThemeMainColorBrush}" 
+                                       Margin="0 0 0 10">
+                                <Run Text="{Binding Info.Current}"></Run>
+                                <Run Text=" / "></Run>
+                                <Run Text="{Binding Info.Total}"></Run>
                             </TextBlock>
                         </Grid>
                     </GridViewItem>
@@ -41,5 +45,6 @@
         <Button Command="{Binding SelectCommand}" HorizontalAlignment="Center" Visibility="{Binding Mangas.Count,Converter={StaticResource IBC}}">
             选择文件夹
         </Button>
+        <ProgressRing Width="100" Height="100" IsActive="{Binding Loading}"></ProgressRing>
     </Grid>
 </Page>

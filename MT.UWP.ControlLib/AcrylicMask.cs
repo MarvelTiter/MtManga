@@ -13,9 +13,16 @@ using Windows.UI.Xaml.Media;
 
 namespace MT.UWP.ControlLib {
     [TemplatePart(Name = PART_Root, Type = typeof(Grid))]
+    [TemplatePart(Name = PART_BlankArea, Type = typeof(Grid))]
+    [TemplateVisualState(GroupName = "VisibleGroup", Name = Visible)]
+    [TemplateVisualState(GroupName = "VisibleGroup", Name = Hidden)]
     public sealed class AcrylicMask : Control {
         private const string PART_Root = "PART_Root";
+        public const string Visible = "Visible";
+        public const string Hidden = "Hidden";
+        public const string PART_BlankArea = "PART_BlankArea";
         private Grid _rootGrid;
+        private Grid _blankGrid;
         public AcrylicMask() {
             DefaultStyleKey = typeof(AcrylicMask);
         }
@@ -43,14 +50,32 @@ namespace MT.UWP.ControlLib {
         }
 
         public static readonly DependencyProperty ShowProperty =
-            DependencyProperty.Register("Show", typeof(bool), typeof(AcrylicMask), new PropertyMetadata(false));
+            DependencyProperty.Register(nameof(Show), typeof(bool), typeof(AcrylicMask), new PropertyMetadata(false,OnShowChanged));
+
+        private static void OnShowChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            var mask = d as AcrylicMask;
+            VisualStateManager.GoToState(mask, mask.SelectState(), true);
+        }
 
         #endregion
 
         protected override void OnApplyTemplate() {
             base.OnApplyTemplate();
+            if (_blankGrid != null)
+                _blankGrid.Tapped -= _blankGrid_Tapped;
             _rootGrid = GetTemplateChild(PART_Root) as Grid;
+            _blankGrid = GetTemplateChild(PART_BlankArea) as Grid;
+            if (_blankGrid != null)
+                _blankGrid.Tapped += _blankGrid_Tapped;
+            VisualStateManager.GoToState(this, SelectState(), false);
         }
 
+        private void _blankGrid_Tapped(object sender, TappedRoutedEventArgs e) {
+            SetValue(ShowProperty, false);
+        }
+
+        private string SelectState() {
+            return Show ? Visible : Hidden;
+        }
     }
 }

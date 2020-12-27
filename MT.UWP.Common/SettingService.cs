@@ -95,7 +95,8 @@ namespace MT.UWP.Common {
                 SaveLocalSetting(key, defaultValue);
                 return defaultValue;
             }
-        }
+        }        
+
         private ApplicationDataContainer currentContainer() {
             var localSetting = ApplicationData.Current.LocalSettings;
             var localcontainer = localSetting.CreateContainer(option.SettingContainerName, ApplicationDataCreateDisposition.Always);

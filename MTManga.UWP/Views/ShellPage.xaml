@@ -8,16 +8,11 @@
     xmlns:mclib="using:MT.UWP.ControlLib"    
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource Locator},Path=Shell}"
-    Background="Transparent">
-    <!--<Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light" Source="theme/Light.xaml"/>
-                <ResourceDictionary x:Key="Dark" Source="theme/Dark.xaml"/>
-            </ResourceDictionary.ThemeDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>-->
+    RequestedTheme="{Binding Theme}">
     <Grid>
+        <Grid.Background>
+            <AcrylicBrush TintColor="#331B1B2B" TintOpacity="0.7" BackgroundSource="HostBackdrop"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />

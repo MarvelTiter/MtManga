@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -58,10 +59,26 @@ namespace MT.UWP.Common {
             }
         }
 
+        public async Task ClearLocalDataAsync() {
+            var folder = ApplicationData.Current.LocalFolder;
+            var items = await folder.GetItemsAsync();
+            foreach (var item in items) {
+                await item.DeleteAsync();
+            }
+        }
+        private SemaphoreSlim asyncLock = new SemaphoreSlim(1);
         public async Task SetLocalDataAsync(string fileName, object content) {
-            var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-            var contentString = jsonConvertService.SerializeObject(content);
-            await FileIO.WriteTextAsync(file, contentString);
+            try {
+                await asyncLock.WaitAsync();
+                var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+                var contentString = jsonConvertService.SerializeObject(content);
+                await FileIO.WriteTextAsync(file, contentString);
+            } catch (Exception ex) {
+                throw ex;
+            } finally {
+                asyncLock.Release();
+            }
+          
         }
 
         public async Task<StorageFolder> GetUserFolderAsync(string token = null) {
@@ -76,7 +93,7 @@ namespace MT.UWP.Common {
             return folder;
         }
 
-        public string SaveFolder(StorageFolder folder) {         
+        public string SaveFolder(StorageFolder folder) {
             var token = StorageApplicationPermissions.FutureAccessList.Add(folder);
             return token;
         }

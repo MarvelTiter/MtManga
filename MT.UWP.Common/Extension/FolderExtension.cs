@@ -9,15 +9,21 @@ using Windows.Storage.AccessCache;
 using Windows.Storage.Search;
 
 namespace MT.UWP.Common.Extension {
-    public static class FolderExtension {     
+    public static class FolderExtension {
         public static async Task<IReadOnlyList<IStorageItem>> GetLocalItemInFolderAsync(this StorageFolder self, params string[] types) {
             QueryOptions itemQuery = FileExtensionQuery(types);
             //itemQuery.SortOrder.Add(new SortEntry { PropertyName = "System.FileName", AscendingOrder = true });
-           
+
             //itemQuery.ApplicationSearchFilter = "新建";
             var queryResult = self.CreateItemQueryWithOptions(itemQuery);
             var storageItems = await queryResult.GetItemsAsync();
             return storageItems;
+        }
+
+        public static async Task<IReadOnlyList<IStorageItem>> GetLocalItemInFolderAsync(this StorageFolder self, uint index, uint size, params string[] types) {
+            QueryOptions itemQuery = FileExtensionQuery(types);
+            var queryResult = self.CreateItemQueryWithOptions(itemQuery);
+            return await queryResult.GetItemsAsync(index * size, size);
         }
 
         public static async Task<int> GetFolderFileCount(this StorageFolder self, params string[] types) {

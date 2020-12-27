@@ -5,9 +5,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI.Xaml;
 
 namespace MTManga.UWP.Models {
     public class AppConfig : ObservableObject {
+
+        public static event Action PageModeChanged;
+        public static event Action PageCountChanged;
+        public static event Action DirectionChanged;
+        public static event Action FixedChanged;
+
+        public RelayCommand UpdatePageCountCommand => new RelayCommand(() => {
+            PageCount += 1;
+        });
+        public RelayCommand UpdatePageModeCommand => new RelayCommand(() => {
+            PageCount += 1;
+        });
+        public RelayCommand UpdateDirectionCommand => new RelayCommand(() => {
+            PageCount += 1;
+        });
+        public RelayCommand UpdateRepairedPageModeCommand => new RelayCommand(() => {
+            RepairedPageMode = !RepairedPageMode;
+        });
 
         private bool _IsHideTitleBarButtonInFullScreen = App.Helper.Setting.GetLocalSetting(ConfigEnum.IsHideTitleBarButtonInFullScreen, false);
         public bool IsHideTitleBarButtonInFullScreen {
@@ -19,40 +39,57 @@ namespace MTManga.UWP.Models {
         }
 
         private int _PageCount = App.Helper.Setting.GetLocalSetting(ConfigEnum.PageCount, 1);
-        /// <summary>
-        /// 0单页、1双页模式
-        /// </summary>
         public int PageCount {
             get { return _PageCount; }
             set {
+                value = value % 2;
                 SetValue(ref _PageCount, value);
                 App.Helper.Setting.SaveLocalSetting(ConfigEnum.PageCount, value);
+                PageCountChanged?.Invoke();
             }
         }
 
-        /// <summary>
-        /// 合页模式 0: L/R  1: R/L
-        /// </summary>
 
         private int _PageMode = App.Helper.Setting.GetLocalSetting(ConfigEnum.PageMode, 1);
         public int PageMode {
             get { return _PageMode; }
             set {
+                value = value % 2;
                 SetValue(ref _PageMode, value);
-                App.Helper.Setting.GetLocalSetting(ConfigEnum.PageMode, 1);
+                App.Helper.Setting.SaveLocalSetting(ConfigEnum.PageMode, value);
+                PageModeChanged?.Invoke();
             }
         }
 
         private int _Direction = App.Helper.Setting.GetLocalSetting(ConfigEnum.Direction, 1);
-        /// <summary>
-        /// 翻页方向  0: 左向右  1: 右向左  
-        /// </summary>
         public int Direction {
             get { return _Direction; }
             set {
+                value = value % 2;
                 SetValue(ref _Direction, value);
-                App.Helper.Setting.GetLocalSetting(ConfigEnum.Direction, 1);
+                App.Helper.Setting.SaveLocalSetting(ConfigEnum.Direction, value);
+                DirectionChanged?.Invoke();
             }
         }
+
+        private int _GroupSize = App.Helper.Setting.GetLocalSetting(ConfigEnum.GroupSize, 20);
+        public int GroupSize {
+            get { return _GroupSize; }
+            set {
+                SetValue(ref _GroupSize, value);
+                App.Helper.Setting.SaveLocalSetting(ConfigEnum.GroupSize, value);
+            }
+        }
+
+        private bool _RepairedPageMode = App.Helper.Setting.GetLocalSetting(ConfigEnum.RepairedPageMode, false);
+        public bool RepairedPageMode {
+            get { return _RepairedPageMode; }
+            set {
+                SetValue(ref _RepairedPageMode, value);
+                App.Helper.Setting.SaveLocalSetting(ConfigEnum.RepairedPageMode, value);
+                FixedChanged?.Invoke();
+            }
+        }
+
     }
 }

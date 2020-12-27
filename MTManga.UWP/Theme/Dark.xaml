@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <SolidColorBrush x:Key="ApplicationThemeMainColor" Color="#409EFF"/>
-    <SolidColorBrush x:Key="ApplicationThemeBackground" Color="#545C64"/>
+    <SolidColorBrush x:Key="ApplicationThemeMainColorBrush" Color="#FFF0F0F0"/>
 </ResourceDictionary>

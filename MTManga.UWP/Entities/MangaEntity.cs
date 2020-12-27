@@ -1,5 +1,4 @@
-﻿using MTManga.UWP.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +7,6 @@ using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace MTManga.UWP.Entities {
-    public class MangaInfo {
-        public string Title { get; set; }
-        public int Total { get; set; }
-        public float Current { get; set; }
-        public ItemType FileType { get; set; } = ItemType.UnSet;
-        public int Offset { get; set; }
-    }
 
     public class MangaEntity {
         public MangaInfo Info { get; }
@@ -24,5 +16,7 @@ namespace MTManga.UWP.Entities {
         }
         public BitmapImage Cover { get; set; }
         public IStorageItem StorageItem { get; set; }
+
+        public bool CanMove => Info.Current + Info.Offset >= 0 && Info.Current + Info.Offset < Info.Total;
     }
 }

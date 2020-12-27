@@ -5,26 +5,69 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    DataContext="{Binding Source={StaticResource Locator},Path=Chapters}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    DataContext="{Binding Source={StaticResource Locator},Path=Chapters}">
     <Grid>
-        <Grid Margin="100 80 0 0">
+        <Grid Margin="50 60 50 0"
+              Background="#00000000">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Image Source="{Binding Model.Cover}"
-                   Width="200"></Image>
-                <StackPanel Grid.Column="1">
-                    <TextBlock Text="{Binding Model.Title}"></TextBlock>
-                    <Button></Button>
-                </StackPanel>
+                <TextBlock Text="{Binding Model.Info.Title}" FontSize="44" FontWeight="ExtraBold"></TextBlock>
             </Grid>
+            <Grid Grid.Row="1" Margin="0 30 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Pivot ItemsSource="{Binding Groups}"
+                       SelectedIndex="{Binding GroupIndex,Mode=TwoWay}">
+                    <Pivot.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Header}" FontSize="24" Foreground="{ThemeResource ApplicationThemeMainColorBrush}"/>
+                        </DataTemplate>
+                    </Pivot.HeaderTemplate>
+                    <Pivot.ItemTemplate>
+                        <DataTemplate></DataTemplate>
+                    </Pivot.ItemTemplate>
+                </Pivot>
+                <Grid Grid.Row="1">
+                    <GridView ItemsSource="{Binding Mangas}"
+                              Name="gridView"                  
+                              SelectedItem="{Binding SelectedManga,Mode=TwoWay}">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <GridViewItem>
+                                    <Grid Width="180" Height="300" Margin="10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Image Source="{Binding Cover}"></Image>
+                                        <TextBlock Grid.Row="1" Text="{Binding Info.Title}" 
+                                                   FontWeight="Bold" HorizontalAlignment="Center" Margin="0 10"
+                                                   TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Row="2" HorizontalAlignment="Center" 
+                                                   Foreground="{ThemeResource ApplicationThemeMainColorBrush}" 
+                                                   Margin="0 0 0 10">
+                                            <Run Text="{Binding Info.Current}"></Run>
+                                            <Run Text=" / "></Run>
+                                            <Run Text="{Binding Info.Total}"></Run>
+                                        </TextBlock>
+                                    </Grid>
+                                </GridViewItem>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </Grid>
+            </Grid>
+            <ProgressRing Width="100" 
+                          Height="100" 
+                          Grid.RowSpan="2"
+                          IsActive="{Binding Loading}">                
+            </ProgressRing>
         </Grid>
     </Grid>
 </Page>

@@ -2,6 +2,7 @@
 using MT.MVVM.Core;
 using MT.MVVM.Core.View;
 using MTManga.UWP.Enums;
+using MTManga.UWP.Models;
 using MTManga.UWP.Views;
 using System;
 using System.Collections.Generic;
@@ -37,11 +38,11 @@ namespace MTManga.UWP.ViewModels {
             set {
                 var item = Menu[value];
                 var trans = CalcSlide(_CurrentIndex > value);
-                SetValue<int>(ref _CurrentIndex, value);
-                Navigator.NavigateTo(item.Content.Name, trans);
+                SetValue(ref _CurrentIndex, value);
+                Navigator.NavigateTo(item.Content, trans);
             }
         }
-
+               
         public INavigationService Navigator => ServiceLocator.Current.GetInstance<NavigationList>()[Nav.IndexFrame];
 
         private SlideNavigationTransitionInfo CalcSlide(bool slide) {
@@ -54,11 +55,11 @@ namespace MTManga.UWP.ViewModels {
             Menu = new List<MenuModel>();
             Menu.Add(new MenuModel {
                 Header = "首页",
-                Content = typeof(IndexView)
+                Content = nameof(IndexView)
             });
             Menu.Add(new MenuModel {
                 Header = "设置",
-                Content = typeof(Setting)
+                Content = nameof(Setting)
             });
 
         }
@@ -67,10 +68,5 @@ namespace MTManga.UWP.ViewModels {
             CurrentIndex = 0;
         }
 
-    }
-
-    public class MenuModel {
-        public string Header { get; set; }
-        public Type Content { get; set; }
     }
 }

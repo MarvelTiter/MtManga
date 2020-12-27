@@ -22,25 +22,7 @@ namespace MTManga.UWP.Views {
 
         public Setting() {
             this.InitializeComponent();
-            DataContext = this;
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e) {
-
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e) {
-
-        }
-
-
-        //public bool GetS1() {
-        //    return App.AppConfig.IsHideTitleBarButtonInFullScreen;
-        //}
-
-        //public void SaveS1(bool? value) {
-        //    App.AppConfig.IsHideTitleBarButtonInFullScreen = value.HasValue && value.Value;
-        //}
     }
 
 }

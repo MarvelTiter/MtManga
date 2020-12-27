@@ -1,0 +1,34 @@
+﻿<UserControl
+    x:Class="MTManga.UWP.Controls.ImageViewer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MTManga.UWP.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400" x:Name="Self">
+    <Grid>
+        <Grid.Background>
+            <AcrylicBrush TintColor="#FF000000" TintOpacity="0.7"/>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Image x:Name="LeftImage" Grid.Column="0" 
+               HorizontalAlignment="Right" 
+               Source="{Binding ElementName=Self,Path=Left}"></Image>
+        <Image x:Name="RightImage" Grid.Column="1" 
+               HorizontalAlignment="Left" 
+               Source="{Binding ElementName=Self,Path=Right}"></Image>
+        <Image x:Name="FullImage" Grid.ColumnSpan="2" 
+               HorizontalAlignment="Center"
+               Visibility="Collapsed"
+               Source="{Binding ElementName=Self,Path=Left}"></Image>
+        <Button Style="{StaticResource HiddenButton}" 
+                    HorizontalAlignment="Left" Command="{Binding ElementName=Self,Path=LeftCommand}"></Button>
+        <Button Style="{StaticResource HiddenButton}" 
+                    HorizontalAlignment="Right" Command="{Binding ElementName=Self,Path=RightCommand}"></Button>
+    </Grid>
+</UserControl>

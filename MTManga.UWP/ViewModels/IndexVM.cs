@@ -24,22 +24,37 @@ namespace MTManga.UWP.ViewModels {
             get { return _SelectedManga; }
             set {
                 SetValue(ref _SelectedManga, value);
-                if (value == null)
-                    return;
-                if (value.Info.FileType == ItemType.List)
-                    ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].NavigateTo(nameof(MangaChapters), value);
-                else
-                    ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].NavigateTo(nameof(MangaRead), value);
+                Navigate();
             }
         }
 
+        private bool _Loading;
+        public bool Loading {
+            get { return _Loading; }
+            set { SetValue(ref _Loading, value); }
+        }
 
         public IndexVM(IMangaCollectionService mangaCollectionService) {
             this.mangaCollectionService = mangaCollectionService;
         }
 
         public async void Load() {
+            Loading = true;
+            if (Mangas != null)
+                foreach (var item in Mangas) {
+                    item.Cover = null;
+                }
             Mangas = await mangaCollectionService.LoadMangasAsync();
+            Loading = false;
+        }
+
+        public void Navigate() {
+            if (SelectedManga == null)
+                return;
+            if (SelectedManga.Info.FileType == ItemType.List)
+                ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].NavigateTo(nameof(MangaChapters), SelectedManga);
+            else
+                ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].NavigateTo(nameof(MangaRead), SelectedManga);
         }
 
         public RelayCommand SelectCommand => new RelayCommand(OpenFiles);

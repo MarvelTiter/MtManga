@@ -6,12 +6,41 @@
     xmlns:model="using:MTManga.UWP.Models" 
     >
     <Application.Resources>
-        <ResourceDictionary>
+        <ResourceDictionary>            
             <model:AppConfig x:Key="Config"/>
             <vm:ViewModelLocator x:Key="Locator"/>
-            <Style TargetType="Frame">
+            <Style TargetType="Button" x:Key="HiddenButton">
+                <Setter Property="Width" Value="200" />
+                <Setter Property="Margin" Value="0,100" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
                 <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+                <Setter Property="UseSystemFocusVisuals" Value="False" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter x:Name="ContentPresenter" 
+                                          AutomationProperties.AccessibilityView="Raw" 
+                                          BackgroundSizing="{TemplateBinding BackgroundSizing}" 
+                                          Background="{TemplateBinding Background}" 
+                                          BorderThickness="{TemplateBinding BorderThickness}" 
+                                          BorderBrush="{TemplateBinding BorderBrush}" 
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                          Content="{TemplateBinding Content}" 
+                                          CornerRadius="{TemplateBinding CornerRadius}" 
+                                          ContentTransitions="{TemplateBinding ContentTransitions}" 
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          Padding="{TemplateBinding Padding}" 
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+                            </ContentPresenter>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light" Source="Theme/Light.xaml"></ResourceDictionary>
+                <ResourceDictionary x:Key="Dark" Source="Theme/Dark.xaml"></ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
             </ResourceDictionary.MergedDictionaries>

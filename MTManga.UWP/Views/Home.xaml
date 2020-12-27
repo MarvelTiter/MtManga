@@ -7,9 +7,9 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
-    DataContext="{Binding Home, Source={StaticResource Locator}}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Grid Margin="20 50 0 0">
+    DataContext="{Binding Home, Source={StaticResource Locator}}">
+    <Grid Margin="20 50 0 0"
+          Background="#00000000">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -20,16 +20,9 @@
                x:Name="pivot">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Header}" FontSize="24"/>
+                    <TextBlock Text="{Binding Header}" FontSize="24" Foreground="{ThemeResource ApplicationThemeMainColorBrush}"/>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
-            <!--<Pivot.ItemTemplate>
-                <DataTemplate>
-                    <PivotItem>
-                        <ScrollViewer Content="{Binding Content}" Padding="0 20"/>
-                    </PivotItem>
-                </DataTemplate>
-            </Pivot.ItemTemplate>-->
             <Pivot.ItemTemplate>
                 <DataTemplate></DataTemplate>
             </Pivot.ItemTemplate>
