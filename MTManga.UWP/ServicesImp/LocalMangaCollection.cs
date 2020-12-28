@@ -162,7 +162,7 @@ namespace MTManga.UWP.ServicesImp {
                         mem = s.ToMemoryStream();
                         if (mem.Length > 0) {
                             randomAccess = mem.AsRandomAccessStream();
-                            return await randomAccess.WriteBitmap();
+                            return await randomAccess.WriteBitmap(200, 323);
                         }
                         s?.Dispose();
                     }
@@ -174,7 +174,7 @@ namespace MTManga.UWP.ServicesImp {
                 }
             } else {
                 using (var randomAccess = await (item as StorageFile).OpenAsync(FileAccessMode.Read)) {
-                    return await randomAccess.WriteBitmap();
+                    return await randomAccess.WriteBitmap(200, 323);
                 }
             }
             return null;

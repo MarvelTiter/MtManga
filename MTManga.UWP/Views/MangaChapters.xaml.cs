@@ -23,7 +23,7 @@ namespace MTManga.UWP.Views {
     public sealed partial class MangaChapters : Page {
         public MangaChapters() {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Enabled;
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
 
     }

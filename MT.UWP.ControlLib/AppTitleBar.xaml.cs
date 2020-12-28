@@ -161,21 +161,8 @@ namespace MT.UWP.ControlLib {
                 applicationTitleBar.ButtonPressedForegroundColor = null;
             } else {
                 Color bgColor = Colors.Transparent;
-
-                Color fgColor = ((SolidColorBrush)Resources["ButtonForegroundColor"]).Color;
-                Color inactivefgColor = ((SolidColorBrush)Resources["ButtonInactiveForegroundBrush"]).Color;
-                Color hoverbgColor = ((SolidColorBrush)Resources["ButtonHoverBackgroundBrush"]).Color;
-                Color hoverfgColor = ((SolidColorBrush)Resources["ButtonHoverForegroundBrush"]).Color;
-                Color pressedbgColor = ((SolidColorBrush)Resources["ButtonPressedBackgroundBrush"]).Color;
-                Color pressedfgColor = ((SolidColorBrush)Resources["ButtonPressedForegroundBrush"]).Color;
                 applicationTitleBar.ButtonBackgroundColor = bgColor;
-                applicationTitleBar.ButtonForegroundColor = fgColor;
                 applicationTitleBar.ButtonInactiveBackgroundColor = bgColor;
-                applicationTitleBar.ButtonInactiveForegroundColor = inactivefgColor;
-                applicationTitleBar.ButtonHoverBackgroundColor = hoverbgColor;
-                applicationTitleBar.ButtonHoverForegroundColor = hoverfgColor;
-                applicationTitleBar.ButtonPressedBackgroundColor = pressedbgColor;
-                applicationTitleBar.ButtonPressedForegroundColor = pressedfgColor;
             }
         }
 

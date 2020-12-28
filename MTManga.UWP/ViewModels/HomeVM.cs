@@ -11,6 +11,14 @@ using Windows.UI.Xaml.Navigation;
 namespace MTManga.UWP.ViewModels {
     public class HomeVM : ViewModelBase {
 
+        public override void OnNavigateTo(NavigationEventArgs e) {
+            CurrentIndex = 0;
+        }
+
+        public override void OnNavigateFrom(NavigatedArgs e) {
+            base.OnNavigateFrom(e);
+        }
+
         private List<MenuModel> _Menu;
         public List<MenuModel> Menu {
             get { return _Menu; }
@@ -60,12 +68,6 @@ namespace MTManga.UWP.ViewModels {
                 Header = "设置",
                 Content = nameof(Setting)
             });
-
         }
-
-        public override void OnNavigateTo(NavigationEventArgs e) {
-            CurrentIndex = 0;
-        }
-
     }
 }

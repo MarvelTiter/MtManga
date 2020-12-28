@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MT.MVVM.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +9,19 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace MTManga.Core.Entities {
 
-    public class MangaEntity {
+    public class MangaEntity : ObservableObject {
 
         public MangaInfo Info { get; }
 
         public MangaEntity(MangaInfo info) {
             Info = info;
         }
-        public BitmapImage Cover { get; set; }
+        private BitmapImage _Cover;
+        public BitmapImage Cover {
+            get { return _Cover; }
+            set { SetValue(ref _Cover, value); }
+        }
+
         public IStorageItem StorageItem { get; set; }
         public bool CanMove => Info.Current + Info.Offset >= 0 && Info.Current + Info.Offset < Info.Total;
 

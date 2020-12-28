@@ -16,6 +16,14 @@ namespace MTManga.UWP.ViewModels {
         public override void OnNavigateTo(NavigationEventArgs e) {
             Load();
         }
+        public override void OnNavigateFrom(NavigatedArgs e) {
+            if (Mangas != null) {
+                foreach (var item in Mangas) {
+                    item.Cover = null;
+                }
+                Mangas.Clear();
+            }
+        }
         public IndexVM(IMangaCollectionService mangaCollectionService) {
             this.mangaCollectionService = mangaCollectionService;
         }
@@ -42,7 +50,7 @@ namespace MTManga.UWP.ViewModels {
              
 
         public async void Load() {
-            Loading = true;
+            Loading = true;            
             Mangas = await mangaCollectionService.LoadMangasAsync();
             Loading = false;
         }

@@ -15,7 +15,7 @@ namespace MTManga.UWP.ViewModels {
             ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].GoBack();
         });
 
-        private ElementTheme _Theme = ElementTheme.Light;
+        private ElementTheme _Theme = ElementTheme.Dark;
         public ElementTheme  Theme {
             get { return _Theme; }
             set { SetValue(ref _Theme, value); }

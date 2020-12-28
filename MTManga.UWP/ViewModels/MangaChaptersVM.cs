@@ -9,6 +9,7 @@ using MTManga.UWP.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +43,14 @@ namespace MTManga.UWP.ViewModels {
             GroupIndex = 0;
         }
 
+        public override void OnNavigateFrom(NavigatedArgs e) {
+            if (Mangas != null) {
+                foreach (var item in Mangas) {
+                    item.Cover = null;
+                }
+                Mangas.Clear();
+            }
+        }
 
         public MangaEntity Model {
             get { return _Model; }
@@ -87,12 +96,16 @@ namespace MTManga.UWP.ViewModels {
             set { SetValue(ref _Loading, value); }
         }
 
-
         private async void Load() {
             Loading = true;
             Model.Info.Group = GroupIndex;
             Model.Info.GroupSize = GroupSize;
-            Mangas?.Clear();
+            if (Mangas != null) {
+                foreach (var item in Mangas) {
+                    item.Cover = null;
+                }
+                Mangas.Clear();
+            }
             Mangas = await mangaCollectionService.LoadMangasAsync();
             Loading = false;
         }
