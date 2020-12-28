@@ -1,8 +1,10 @@
 ﻿using CommonServiceLocator;
 using MT.MVVM.Core.Ioc;
 using MT.MVVM.Core.View;
-using MTManga.UWP.Enums;
-using MTManga.UWP.Services;
+using MT.UWP.Common;
+using MTManga.Core.Enums;
+using MTManga.Core.Services;
+using MTManga.UWP.ServicesImp;
 using MTManga.UWP.Views;
 
 namespace MTManga.UWP.ViewModels {
@@ -34,6 +36,7 @@ namespace MTManga.UWP.ViewModels {
                 .RegisterSingle<ShellVM>(false)
                 .RegisterScope<MangaReadVM>()
                 .RegisterScope<SettingVM>()
+                .RegisterScope<KeyEventRunner>()
                 .RegisterSingle(() => RegisterContentView())
                 .RegisterSingle(() => InitNavigation())
                 ;

@@ -1,7 +1,6 @@
 ﻿using CommonServiceLocator;
 using MT.MVVM.Core.View;
-using MTManga.UWP.Enums;
-using MTManga.UWP.Views;
+using MTManga.Core.Enums;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 

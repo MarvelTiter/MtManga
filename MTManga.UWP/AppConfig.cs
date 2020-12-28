@@ -1,14 +1,8 @@
 ﻿using MT.MVVM.Core;
-using MTManga.UWP.Enums;
+using MTManga.Core.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI.Xaml;
 
-namespace MTManga.UWP.Models {
+namespace MTManga.UWP {
     public class AppConfig : ObservableObject {
 
         public static event Action PageModeChanged;

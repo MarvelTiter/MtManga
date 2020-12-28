@@ -136,17 +136,10 @@
     <Compile Include="Converters\IntVisibilityConverter.cs" />
     <Compile Include="Converters\LabelConverter.cs" />
     <Compile Include="Converters\WidthConverter.cs" />
-    <Compile Include="Entities\MangaEntity.cs" />
-    <Compile Include="Entities\MangaInfo.cs" />
-    <Compile Include="Enums\ConfigEnum.cs" />
-    <Compile Include="Enums\ItemType.cs" />
-    <Compile Include="Enums\Nav.cs" />
-    <Compile Include="Exceptions\CustomException.cs" />
-    <Compile Include="Extention\StreamExtension.cs" />
-    <Compile Include="Models\AppConfig.cs" />
-    <Compile Include="Services\IMangaReadingService.cs" />
-    <Compile Include="Services\LocalMangaReading.cs" />
-    <Compile Include="Models\MenuModel.cs" />
+    <Compile Include="AppConfig.cs" />
+    <Compile Include="ServicesImp\LocalManga.cs" />
+    <Compile Include="ServicesImp\LocalMangaCollection.cs" />
+    <Compile Include="ServicesImp\LocalMangaReading.cs" />
     <Compile Include="ViewModels\SettingVM.cs" />
     <Compile Include="ViewModels\ShellVM.cs" />
     <Compile Include="Views\Home.xaml.cs">
@@ -159,10 +152,6 @@
       <DependentUpon>MangaRead.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IMangaCollectionService.cs" />
-    <Compile Include="Services\IMangaService.cs" />
-    <Compile Include="Services\LocalManga.cs" />
-    <Compile Include="Services\LocalMangaCollection.cs" />
     <Compile Include="Views\ShellPage.xaml.cs">
       <DependentUpon>ShellPage.xaml</DependentUpon>
     </Compile>
@@ -318,10 +307,15 @@
       <Project>{13350c1e-3021-4801-92d3-70a94136da28}</Project>
       <Name>MT.UWP.ControlLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MTManga.Core\MTManga.Core.csproj">
+      <Project>{03326492-23a6-4257-8ff5-a1117f95fddb}</Project>
+      <Name>MTManga.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="MTManga.UWP_TemporaryKey.pfx" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

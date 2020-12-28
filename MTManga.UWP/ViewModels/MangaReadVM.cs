@@ -1,16 +1,9 @@
 ﻿using MT.MVVM.Core;
 using MT.MVVM.Core.View;
-using MT.UWP.Common.Extension;
-using MTManga.UWP.Entities;
-using MTManga.UWP.Enums;
-using MTManga.UWP.Extention;
-using MTManga.UWP.Models;
-using MTManga.UWP.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MT.UWP.Common;
+using MTManga.Core.Entities;
+using MTManga.Core.Enums;
+using MTManga.Core.Services;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
@@ -20,6 +13,7 @@ namespace MTManga.UWP.ViewModels {
     public class MangaReadVM : ViewModelBase {
         public MangaEntity _instance;
         private readonly IMangaReadingService mangaReadingService;
+        private readonly KeyEventRunner keyEventRunner;
 
         public override void OnNavigateTo(NavigationEventArgs e) {
             _instance = e.Parameter as MangaEntity;
@@ -49,10 +43,41 @@ namespace MTManga.UWP.ViewModels {
             AppConfig.FixedChanged -= AppConfig_FixedChanged;
             AppConfig.PageCountChanged -= AppConfig_PageCountChange;
             AppConfig.PageModeChanged -= AppConfig_PageModeChange;
+            mangaReadingService.Dispose();
         }
 
-        public MangaReadVM(IMangaReadingService mangaReadingService) {
+        public MangaReadVM(IMangaReadingService mangaReadingService, KeyEventRunner keyEventRunner) {
             this.mangaReadingService = mangaReadingService;
+            this.keyEventRunner = keyEventRunner;
+            InitEvent();
+        }
+
+        private void InitEvent() {
+            void left() => LeftCommand.Execute(null);
+            void right() => RightCommand.Execute(null);
+            void toggle() => ShowSetting = !ShowSetting;
+            var cfg = App.Current.Resources["Config"] as AppConfig;
+            void pageCount() => cfg.UpdatePageCountCommand.Execute(null);
+            void repaired() => cfg.UpdateRepairedPageModeCommand.Execute(null);
+            void pageMode() => cfg.UpdatePageModeCommand.Execute(null);
+            // 左翻
+            keyEventRunner.RegisterAction(VirtualKey.A, left);
+            keyEventRunner.RegisterAction(VirtualKey.Left, left);
+            // 右翻
+            keyEventRunner.RegisterAction(VirtualKey.D, right);
+            keyEventRunner.RegisterAction(VirtualKey.Right, right);
+            // 显示设置
+            keyEventRunner.RegisterAction(VirtualKey.Y, toggle);
+            keyEventRunner.RegisterAction(VirtualKey.GamepadY, toggle);
+            // 单页/双页
+            keyEventRunner.RegisterAction(VirtualKey.X, pageCount);
+            keyEventRunner.RegisterAction(VirtualKey.GamepadX, pageCount);
+            // 修复合页
+            keyEventRunner.RegisterAction(VirtualKey.C, repaired);
+            keyEventRunner.RegisterAction(VirtualKey.GamepadB, repaired);
+            // L/R R/L
+            keyEventRunner.RegisterAction(VirtualKey.G, pageMode);
+            keyEventRunner.RegisterAction(VirtualKey.GamepadA, pageMode);
         }
 
         private BitmapImage _Left;
@@ -93,14 +118,7 @@ namespace MTManga.UWP.ViewModels {
         });
 
         private void Content_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e) {
-            if (e.Key == VirtualKey.A || e.Key == VirtualKey.Left) {
-                LeftCommand.Execute(null);
-            } else if (e.Key == VirtualKey.D || e.Key == VirtualKey.Right) {
-                RightCommand.Execute(null);
-            } else if (e.Key == VirtualKey.C) {
-            } else if (e.Key == VirtualKey.Y || e.Key == VirtualKey.GamepadY) {
-                ShowSetting = !ShowSetting;
-            }
+            keyEventRunner[e.Key]?.Invoke();
         }
 
         private async void Read() {

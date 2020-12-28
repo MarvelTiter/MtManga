@@ -1,9 +1,9 @@
 ﻿using CommonServiceLocator;
 using MT.MVVM.Core;
 using MT.MVVM.Core.View;
-using MTManga.UWP.Entities;
-using MTManga.UWP.Enums;
-using MTManga.UWP.Services;
+using MTManga.Core.Entities;
+using MTManga.Core.Enums;
+using MTManga.Core.Services;
 using MTManga.UWP.Views;
 using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Navigation;
@@ -40,10 +40,10 @@ namespace MTManga.UWP.ViewModels {
 
         public async void Load() {
             Loading = true;
-            if (Mangas != null)
-                foreach (var item in Mangas) {
-                    item.Cover = null;
-                }
+            //if (Mangas != null)
+            //    foreach (var item in Mangas) {
+            //        item.Cover = null;
+            //    }
             Mangas = await mangaCollectionService.LoadMangasAsync();
             Loading = false;
         }

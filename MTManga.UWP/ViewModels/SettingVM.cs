@@ -1,5 +1,5 @@
 ﻿using MT.MVVM.Core;
-using MTManga.UWP.Enums;
+using MTManga.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

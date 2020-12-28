@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTManga.UWP.Enums {
-    public enum Nav {
-        ShellFrame,
-        IndexFrame
+namespace MTManga.Core.Enums {
+    public enum ItemType {
+        UnSet,
+        ZipManga,
+        FolderManga,
+        List,
     }
 }

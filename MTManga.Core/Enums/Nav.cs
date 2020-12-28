@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTManga.UWP.Services {
-    public interface IMangaService {
-        void LoadChapters();
+namespace MTManga.Core.Enums {
+    public enum Nav {
+        ShellFrame,
+        IndexFrame
     }
 }

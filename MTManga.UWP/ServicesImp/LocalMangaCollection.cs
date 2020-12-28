@@ -1,20 +1,20 @@
 ﻿using MT.UWP.Common.Extension;
-using MTManga.UWP.Entities;
-using MTManga.UWP.Enums;
-using MTManga.UWP.Extention;
+using MTManga.Core.Entities;
+using MTManga.Core.Enums;
+using MTManga.Core.Extention;
+using MTManga.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace MTManga.UWP.Services {
+namespace MTManga.UWP.ServicesImp {
     public class LocalMangaCollection : IMangaCollectionService {
         public object DataCore { get; set; }
         private StorageFolder _folder;
@@ -114,9 +114,8 @@ namespace MTManga.UWP.Services {
                 var total = 0;
                 var file = item.File();
                 if (file.FileType == ".zip") {
-                    var fileStream = await file.OpenReadAsync();
-                    IRandomAccessStream randomAccess = null;
-                    var zipArchive = new ZipArchive(fileStream.AsStream());
+                    var fileStream = await file.OpenStreamForReadAsync();
+                    var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Read);
                     MemoryStream mem = null;
                     total = zipArchive.Entries.Count;
                     try {
@@ -132,14 +131,9 @@ namespace MTManga.UWP.Services {
                             s?.Dispose();
                         }
                     } finally {
-                        zipArchive?.Dispose();
-                        zipArchive = null;
-                        randomAccess?.Dispose();
-                        randomAccess = null;
-                        fileStream?.Dispose();
-                        fileStream = null;
                         mem?.Dispose();
-                        mem = null;
+                        fileStream?.Dispose();
+                        zipArchive?.Dispose();
                     }
                 }
                 return new int[] { offset, total };
@@ -160,7 +154,7 @@ namespace MTManga.UWP.Services {
             if (file.FileType == ".zip") {
                 var fileStream = await file.OpenStreamForReadAsync();
                 IRandomAccessStream randomAccess = null;
-                var zipArchive = new ZipArchive(fileStream);
+                var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Read);
                 MemoryStream mem = null;
                 try {
                     foreach (var entry in zipArchive.Entries) {
@@ -168,24 +162,19 @@ namespace MTManga.UWP.Services {
                         mem = s.ToMemoryStream();
                         if (mem.Length > 0) {
                             randomAccess = mem.AsRandomAccessStream();
-                            return await WriteBitmap(randomAccess);
+                            return await randomAccess.WriteBitmap();
                         }
                         s?.Dispose();
                     }
                 } finally {
-                    zipArchive?.Dispose();
-                    zipArchive = null;
                     randomAccess?.Dispose();
-                    randomAccess = null;
-                    fileStream?.Dispose();
-                    fileStream = null;
                     mem?.Dispose();
-                    mem = null;
-                    GC.Collect();
+                    fileStream?.Dispose();
+                    zipArchive?.Dispose();
                 }
             } else {
                 using (var randomAccess = await (item as StorageFile).OpenAsync(FileAccessMode.Read)) {
-                    return await WriteBitmap(randomAccess);
+                    return await randomAccess.WriteBitmap();
                 }
             }
             return null;
@@ -202,10 +191,6 @@ namespace MTManga.UWP.Services {
             } catch (FileNotFoundException ex) {
                 return null;
             }
-        }
-
-        private async Task<BitmapImage> WriteBitmap(IRandomAccessStream randomAccess) {
-            return await randomAccess.WriteBitmap(200, 323);
         }
     }
 }

@@ -4,11 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTManga.UWP.Enums {
-    public enum ItemType {
-        UnSet,
-        ZipManga,
-        FolderManga,
-        List,
+namespace MTManga.Core.Services {
+    public interface IMangaService {
+        void LoadChapters();
     }
 }

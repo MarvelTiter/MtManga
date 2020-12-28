@@ -1,10 +1,9 @@
 ﻿using CommonServiceLocator;
 using MT.MVVM.Core;
 using MT.MVVM.Core.View;
-using MTManga.UWP.Enums;
-using MTManga.UWP.Models;
+using MTManga.Core.Enums;
+using MTManga.Core.Models;
 using MTManga.UWP.Views;
-using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;

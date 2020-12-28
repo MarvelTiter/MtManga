@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace MTManga.UWP.Entities {
+namespace MTManga.Core.Entities {
 
     public class MangaEntity {
         public MangaInfo Info { get; }

@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace MTManga.UWP.Services {
-    public interface IMangaReadingService {
+namespace MTManga.Core.Services {
+    public interface IMangaReadingService : IDisposable {
         object DataCore { get; set; }
         Task<BitmapImage> ReadAsync(int index);
 

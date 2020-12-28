@@ -1,6 +1,6 @@
-﻿using MTManga.UWP.Enums;
+﻿using MTManga.Core.Enums;
 
-namespace MTManga.UWP.Entities {
+namespace MTManga.Core.Entities {
     public class MangaInfo {
         public string Title { get; set; }
         public int Total { get; set; }

@@ -1,7 +1,7 @@
 ﻿using CommonServiceLocator;
 using MT.MVVM.Core;
 using MT.MVVM.Core.View;
-using MTManga.UWP.Enums;
+using MTManga.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

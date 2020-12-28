@@ -1,10 +1,10 @@
 ﻿using CommonServiceLocator;
 using MT.MVVM.Core;
 using MT.MVVM.Core.View;
-using MTManga.UWP.Entities;
-using MTManga.UWP.Enums;
-using MTManga.UWP.Models;
-using MTManga.UWP.Services;
+using MTManga.Core.Entities;
+using MTManga.Core.Enums;
+using MTManga.Core.Models;
+using MTManga.Core.Services;
 using MTManga.UWP.Views;
 using System;
 using System.Collections.Generic;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace MTManga.UWP.Extention {
+namespace MTManga.Core.Extention {
     public static class StreamExtension {
         public static MemoryStream ToMemoryStream(this Stream self) {
             MemoryStream mem = new MemoryStream();
