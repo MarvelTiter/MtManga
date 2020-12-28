@@ -16,7 +16,6 @@ namespace MTManga.UWP.Views {
         }
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
-            //ShellFrame.Navigate(typeof(Home));
             var navtor = ServiceLocator.Current.GetInstance<NavigationList>();
             navtor[Nav.ShellFrame].NavigateTo(nameof(Home));
         }

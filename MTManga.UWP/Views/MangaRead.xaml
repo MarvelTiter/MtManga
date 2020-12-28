@@ -25,7 +25,7 @@
         </Button>
         <mclib:AcrylicMask x:Name="acrylicMask" Show="{Binding ShowSetting, Mode=TwoWay}">
             <mclib:AcrylicMask.TopArea>
-                <StackPanel Margin="50 100 0 50"
+                <StackPanel Margin="50 70 0 20"
                             HorizontalAlignment="Left"
                             Background="Transparent"
                             Orientation="Horizontal">
@@ -44,7 +44,6 @@
                                   Command="{Binding Source={StaticResource Config},Path=UpdateRepairedPageModeCommand}"></AppBarButton>
                 </StackPanel>
             </mclib:AcrylicMask.TopArea>
-        </mclib:AcrylicMask>
-        
+        </mclib:AcrylicMask>        
     </Grid>
 </Page>

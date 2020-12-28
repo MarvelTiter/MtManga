@@ -73,7 +73,7 @@ namespace MTManga.UWP.ServicesImp {
             if (!disposedValue) {
                 if (disposing) {
                     // TODO: 释放托管状态(托管对象)
-                    _zip.Dispose();
+                    _zip?.Dispose();
                 }
                 // TODO: 释放未托管的资源(未托管的对象)并替代终结器
                 // TODO: 将大型字段设置为 null

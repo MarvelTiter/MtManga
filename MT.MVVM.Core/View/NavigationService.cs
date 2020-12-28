@@ -113,7 +113,6 @@ namespace MT.MVVM.Core.View {
                         NavigationMode = NavigationMode.Forward
                     });
                 }
-
             }
         }
 
@@ -124,7 +123,7 @@ namespace MT.MVVM.Core.View {
         public bool NavigateTo(string pageKey, object parameter, NavigationTransitionInfo transInfo = null) {
             lock (_pagesByKey) {
                 if (!_pagesByKey.ContainsKey(pageKey)) {
-                    throw new ArgumentException($"No such page: {pageKey}.", "pageKey");
+                    throw new ArgumentException($"No such page: {pageKey}.");
                 }
                 var currentPage = CurrentFrame.Content as Page;
                 var b = CurrentFrame.Navigate(_pagesByKey[pageKey], parameter, transInfo);
@@ -153,7 +152,6 @@ namespace MT.MVVM.Core.View {
                 if (_pagesByKey.ContainsValue(pageType)) {
                     throw new ArgumentException("This type is already configured with key " + _pagesByKey.First((KeyValuePair<string, Type> p) => (object)p.Value == pageType).Key);
                 }
-
                 _pagesByKey.Add(key, pageType);
             }
         }
