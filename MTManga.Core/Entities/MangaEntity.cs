@@ -23,7 +23,7 @@ namespace MTManga.Core.Entities {
         }
 
         public IStorageItem StorageItem { get; set; }
-        public bool CanMove => Info.Current + Info.Offset >= 0 && Info.Current + Info.Offset < Info.Total;
+        public bool CanMove => Info.Current + Info.Offset >= 0 && Info.Current < Info.Total;
 
         public string Status {
             get {
@@ -31,7 +31,7 @@ namespace MTManga.Core.Entities {
                     return $"合集({Info.Total})";
                 if (Info.Current == 0)
                     return $"未看 / {Info.Total}";
-                return $"{Info.Current} / {Info.Total}";
+                return $"{Info.Current + 1} / {Info.Total}";
             }
         }
     }

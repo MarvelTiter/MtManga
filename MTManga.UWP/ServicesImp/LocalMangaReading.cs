@@ -30,17 +30,21 @@ namespace MTManga.UWP.ServicesImp {
                 return null;
             if (_entity.Info.FileType == ItemType.ZipManga) {
                 // StorageFile ZipArchive
+                if (index >= _zip.Entries.Count)
+                    return null;
                 var entry = _zip.Entries[index];
                 return await entry.Open().ToMemoryStream().AsRandomAccessStream().WriteBitmap();
             } else {
                 // StorageFolder
+                if (index >= _entity.Info.Total)
+                    return null;
                 var file = await _folder.GetFilesAsync(CommonFileQuery.DefaultQuery, (uint)index, 1);
-                var random = await file[0].OpenAsync(FileAccessMode.Read);
+                var random = await file?[0].OpenAsync(FileAccessMode.Read);
                 return await random.WriteBitmap();
             }
         }
 
-        public async Task SaveReadingProgressAsync() {
+        public async Task<bool> SaveReadingProgressAsync() {
             _infos = await App.Helper.IO.GetLocalDataAsync<List<MangaInfo>>(saveName);
             _infos.ForEach(i => {
                 if (i.Title == _entity.Info.Title) {
@@ -48,6 +52,7 @@ namespace MTManga.UWP.ServicesImp {
                 }
             });
             await App.Helper.IO.SetLocalDataAsync(saveName, _infos);
+            return true;
         }
 
         public async Task Init() {

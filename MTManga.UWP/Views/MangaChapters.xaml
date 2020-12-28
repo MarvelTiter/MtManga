@@ -51,10 +51,8 @@
                                                    TextWrapping="Wrap"/>
                                         <TextBlock Grid.Row="2" HorizontalAlignment="Center" 
                                                    Foreground="{ThemeResource ApplicationThemeMainColorBrush}" 
-                                                   Margin="0 0 0 10">
-                                            <Run Text="{Binding Info.Current}"></Run>
-                                            <Run Text=" / "></Run>
-                                            <Run Text="{Binding Info.Total}"></Run>
+                                                   Margin="0 0 0 10"
+                                                   Text="{Binding Status}">
                                         </TextBlock>
                                     </Grid>
                                 </GridViewItem>

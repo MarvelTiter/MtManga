@@ -26,7 +26,7 @@ namespace MTManga.UWP.ViewModels {
         }
 
 
-        public override void OnNavigateFrom(NavigatedArgs e) {
+        public async override void OnNavigateFrom(NavigatedArgs e) {
             Window.Current.Content.KeyDown -= Content_KeyDown;
             AppConfig.FixedChanged -= AppConfig_FixedChanged;
             AppConfig.PageCountChanged -= AppConfig_PageCountChange;
@@ -106,6 +106,8 @@ namespace MTManga.UWP.ViewModels {
         public int Direction => App.Helper.Setting.GetLocalSetting(ConfigEnum.Direction, 1);
         public bool RepairedPageMode => App.Helper.Setting.GetLocalSetting(ConfigEnum.RepairedPageMode, false);
 
+        public int FixedOffset => (RepairedPageMode && PageCount > 0 ? -1 : 0);
+
         public RelayCommand LeftCommand => new RelayCommand(() => {
             _instance.Info.Current += (PageCount + 1);
             Read();
@@ -124,7 +126,7 @@ namespace MTManga.UWP.ViewModels {
         }
 
         private async void Read() {
-            var current = _instance.Info.Offset + (RepairedPageMode ? -1 : 0) + _instance.Info.Current;
+            var current = _instance.Info.Offset + FixedOffset + _instance.Info.Current;
             if (!_instance.CanMove)
                 return;
             var first = await mangaReadingService.ReadAsync(current);
@@ -141,7 +143,7 @@ namespace MTManga.UWP.ViewModels {
                 }
             }
             // save current
-            await mangaReadingService.SaveReadingProgressAsync();
+            _ = await mangaReadingService.SaveReadingProgressAsync();
             RaisePropertyChanged(nameof(CurrentIndex));
         }
     }

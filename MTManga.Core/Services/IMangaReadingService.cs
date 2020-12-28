@@ -10,6 +10,6 @@ namespace MTManga.Core.Services {
         object DataCore { get; set; }
         Task<BitmapImage> ReadAsync(int index);
 
-        Task SaveReadingProgressAsync();
+        Task<bool> SaveReadingProgressAsync();
     }
 }

@@ -4,7 +4,17 @@ namespace MTManga.Core.Entities {
     public class MangaInfo {
         public string Title { get; set; }
         public int Total { get; set; }
-        public int Current { get; set; }
+        private int current;
+
+        public int Current {
+            get { return current; }
+            set {
+                if (value < 0 || value > Total - 1)
+                    return;
+                current = value;
+            }
+        }
+
         public ItemType FileType { get; set; } = ItemType.UnSet;
         public int Offset { get; set; }
         public int Group { get; set; }

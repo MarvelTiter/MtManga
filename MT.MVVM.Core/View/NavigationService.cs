@@ -91,7 +91,6 @@ namespace MT.MVVM.Core.View {
 
         public void GoBack() {
             if (CurrentFrame.CanGoBack) {
-                CurrentFrame.GoBack();
                 var currentPage = CurrentFrame.Content as Page;
                 if (currentPage?.DataContext is INavigable nav) {
                     nav.OnNavigateFrom(new NavigatedArgs {
@@ -99,13 +98,12 @@ namespace MT.MVVM.Core.View {
                         NavigationMode = NavigationMode.Back
                     });
                 }
-
+                CurrentFrame.GoBack();
             }
         }
 
         public void GoForward() {
             if (CurrentFrame.CanGoForward) {
-                CurrentFrame.GoForward();
                 var currentPage = CurrentFrame.Content as Page;
                 if (currentPage?.DataContext is INavigable nav) {
                     nav.OnNavigateFrom(new NavigatedArgs {
@@ -113,6 +111,7 @@ namespace MT.MVVM.Core.View {
                         NavigationMode = NavigationMode.Forward
                     });
                 }
+                CurrentFrame.GoForward();
             }
         }
 
