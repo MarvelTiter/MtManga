@@ -25,6 +25,15 @@ namespace MTManga.UWP.ViewModels {
             Read();
         }
 
+
+        public override void OnNavigateFrom(NavigatedArgs e) {
+            Window.Current.Content.KeyDown -= Content_KeyDown;
+            AppConfig.FixedChanged -= AppConfig_FixedChanged;
+            AppConfig.PageCountChanged -= AppConfig_PageCountChange;
+            AppConfig.PageModeChanged -= AppConfig_PageModeChange;
+            mangaReadingService.Dispose();
+        }
+
         private void AppConfig_FixedChanged() {
             Read();
         }
@@ -35,15 +44,6 @@ namespace MTManga.UWP.ViewModels {
 
         private void AppConfig_PageCountChange() {
             Read();
-        }
-
-
-        public override void OnNavigateFrom(NavigatedArgs e) {
-            Window.Current.Content.KeyDown -= Content_KeyDown;
-            AppConfig.FixedChanged -= AppConfig_FixedChanged;
-            AppConfig.PageCountChanged -= AppConfig_PageCountChange;
-            AppConfig.PageModeChanged -= AppConfig_PageModeChange;
-            mangaReadingService.Dispose();
         }
 
         public MangaReadVM(IMangaReadingService mangaReadingService, KeyEventRunner keyEventRunner) {
@@ -97,7 +97,9 @@ namespace MTManga.UWP.ViewModels {
             get { return _ShowSetting; }
             set { SetValue(ref _ShowSetting, value); }
         }
-
+        public string CurrentName => _instance.Info.Title;
+        public int CurrentIndex => _instance.Info.Current + 1;
+        public int TotalPage => _instance.Info.Total;
 
         public int PageCount => App.Helper.Setting.GetLocalSetting(ConfigEnum.PageCount, 1);
         public int PageMode => App.Helper.Setting.GetLocalSetting(ConfigEnum.PageMode, 1);
@@ -140,6 +142,7 @@ namespace MTManga.UWP.ViewModels {
             }
             // save current
             await mangaReadingService.SaveReadingProgressAsync();
+            RaisePropertyChanged(nameof(CurrentIndex));
         }
     }
 }

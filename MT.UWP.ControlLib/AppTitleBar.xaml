@@ -92,18 +92,7 @@
                             x:Name="AppTitleCustomButtonBar">
                     <StackPanel x:Name="ItemsPanel"
                         Orientation="Horizontal">
-                    </StackPanel>
-                    <Button Content="&#xF08C;">
-                        <Button.Flyout>
-                            <Flyout>
-                                <StackPanel>
-                                    <TextBlock Text="亮度" />
-                                    <Slider></Slider>
-                                    <TextBlock Text="主题" />
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
+                    </StackPanel>                    
                     <Button Content="{Binding WindowStateIcon,ElementName=Self}" Name="btnFullScreen" Click="btnFullScreen_Click"></Button>
                 </StackPanel>                
             </StackPanel>

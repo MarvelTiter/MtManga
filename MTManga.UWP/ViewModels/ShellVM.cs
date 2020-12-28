@@ -15,10 +15,17 @@ namespace MTManga.UWP.ViewModels {
             ServiceLocator.Current.GetInstance<NavigationList>()[Nav.ShellFrame].GoBack();
         });
 
-        private ElementTheme _Theme = ElementTheme.Dark;
+        private ElementTheme _Theme = ElementTheme.Light;
         public ElementTheme  Theme {
             get { return _Theme; }
             set { SetValue(ref _Theme, value); }
         }
+
+        public RelayCommand ToggleTheme => new RelayCommand(() => {
+            if (Theme == ElementTheme.Light)
+                Theme = ElementTheme.Dark;
+            else
+                Theme = ElementTheme.Light;
+        });
     }
 }

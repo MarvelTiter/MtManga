@@ -2,4 +2,5 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="ApplicationThemeMainColorBrush" Color="#FFF0F0F0"/>
+    <AcrylicBrush TintColor="#331B1B2B" FallbackColor="#1C1C1C" TintOpacity="0.7" BackgroundSource="HostBackdrop" x:Key="ApplicationThemeMainBackgroundAcrylicBrush"/>
 </ResourceDictionary>

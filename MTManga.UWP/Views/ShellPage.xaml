@@ -9,10 +9,7 @@
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource Locator},Path=Shell}"
     RequestedTheme="{Binding Theme}">
-    <Grid>
-        <Grid.Background>
-            <AcrylicBrush TintColor="#331B1B2B" TintOpacity="0.7" BackgroundSource="HostBackdrop"/>
-        </Grid.Background>
+    <Grid Background="{ThemeResource ApplicationThemeMainBackgroundAcrylicBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -20,6 +17,20 @@
         <Frame Grid.RowSpan="2" x:Name="ShellFrame"></Frame>
         <mclib:AppTitleBar BackCommand="{Binding ShellBackCommand}"
                            HideInFullScreen="{Binding Source={StaticResource Config},Path=IsHideTitleBarButtonInFullScreen}"
-                           ></mclib:AppTitleBar>
+                           >
+            <mclib:AppTitleBar.Buttons>
+                <Button Content="&#xF08C;">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <TextBlock Text="亮度" />
+                                <Slider></Slider>                                
+                                <Button Content="切换主题" Command="{Binding ToggleTheme}"></Button>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </mclib:AppTitleBar.Buttons>
+        </mclib:AppTitleBar>
     </Grid>
 </Page>

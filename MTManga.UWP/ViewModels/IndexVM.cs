@@ -13,6 +13,12 @@ namespace MTManga.UWP.ViewModels {
 
         private ObservableCollection<MangaEntity> _Mangas;
         private readonly IMangaCollectionService mangaCollectionService;
+        public override void OnNavigateTo(NavigationEventArgs e) {
+            Load();
+        }
+        public IndexVM(IMangaCollectionService mangaCollectionService) {
+            this.mangaCollectionService = mangaCollectionService;
+        }
 
         public ObservableCollection<MangaEntity> Mangas {
             get { return _Mangas; }
@@ -33,17 +39,10 @@ namespace MTManga.UWP.ViewModels {
             get { return _Loading; }
             set { SetValue(ref _Loading, value); }
         }
-
-        public IndexVM(IMangaCollectionService mangaCollectionService) {
-            this.mangaCollectionService = mangaCollectionService;
-        }
+             
 
         public async void Load() {
             Loading = true;
-            //if (Mangas != null)
-            //    foreach (var item in Mangas) {
-            //        item.Cover = null;
-            //    }
             Mangas = await mangaCollectionService.LoadMangasAsync();
             Loading = false;
         }
@@ -67,13 +66,5 @@ namespace MTManga.UWP.ViewModels {
             App.Helper.Setting.SaveLocalSetting(ConfigEnum.RootFolderToken, token);
             Load();
         }
-
-        public override void OnNavigateTo(NavigationEventArgs e) {
-            Load();
-        }
-
-        public override void OnNavigateFrom(NavigatedArgs e) {
-        }
-
     }
 }
