@@ -12,7 +12,8 @@
     DataContext="{Binding Source={StaticResource Locator},Path=Manga}">
     <Page.Resources>
         <cc:IntToBooleanConverter x:Key="IBC"/>
-        <localcc:LabelConverter x:Key="LC"/>        
+        <localcc:PageModeLabelConverter x:Key="LC"/>
+        <localcc:DirectionIconConverter x:Key="IconC"/>
     </Page.Resources>
     <Grid Background="#00000000">
         <local:ImageViewer Left="{Binding Left}" 
@@ -29,18 +30,22 @@
                             HorizontalAlignment="Left"
                             Background="Transparent"
                             Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style TargetType="AppBarButton" BasedOn="{StaticResource AppBarButtonRevealStyle}">
+                            <Setter Property="Margin" Value="2 0" />
+                        </Style>
+                    </StackPanel.Resources>
                     <AppBarButton Icon="Page" Foreground="White"
-                                  Style="{ThemeResource AppBarButtonRevealStyle}"
                                   Label="{Binding Source={StaticResource Config},Path=PageCount,Converter={StaticResource LC}}" 
                                   Command="{Binding Source={StaticResource Config},Path=UpdatePageCountCommand}"></AppBarButton>
-                    <AppBarButton Icon="TwoPage" Label="合页模式"
-                                  Style="{ThemeResource AppBarButtonRevealStyle}"
+                    <AppBarButton Icon="TwoPage" 
+                                  Label="合页模式(G)"
                                   Command="{Binding Source={StaticResource Config},Path=UpdatePageModeCommand}"></AppBarButton>
-                    <AppBarButton Icon="Switch" Label="翻页方向" 
-                                  Style="{ThemeResource AppBarButtonRevealStyle}"
+                    <AppBarButton Icon="{Binding Source={StaticResource Config},Path=Direction,Converter={StaticResource IconC}}" 
+                                  Label="翻页方向(Z)" 
                                   Command="{Binding Source={StaticResource Config},Path=UpdateDirectionCommand}"></AppBarButton>
-                    <AppBarButton Icon="Repair" Label="修复合页" 
-                                  Style="{ThemeResource AppBarButtonRevealStyle}"
+                    <AppBarButton Icon="Repair" 
+                                  Label="修复合页(C)" 
                                   Command="{Binding Source={StaticResource Config},Path=UpdateRepairedPageModeCommand}"></AppBarButton>
                 </StackPanel>
             </mclib:AcrylicMask.TopArea>

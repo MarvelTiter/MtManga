@@ -14,10 +14,10 @@ namespace MTManga.UWP {
             PageCount += 1;
         });
         public RelayCommand UpdatePageModeCommand => new RelayCommand(() => {
-            PageCount += 1;
+            PageMode += 1;
         });
         public RelayCommand UpdateDirectionCommand => new RelayCommand(() => {
-            PageCount += 1;
+            Direction += 1;
         });
         public RelayCommand UpdateRepairedPageModeCommand => new RelayCommand(() => {
             RepairedPageMode = !RepairedPageMode;

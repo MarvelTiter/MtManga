@@ -28,7 +28,7 @@ namespace MTManga.UWP.ViewModels {
         }
 
 
-        public async override void OnNavigateFrom(NavigatedArgs e) {
+        public override void OnNavigateFrom(NavigatedArgs e) {
             Window.Current.Content.KeyDown -= Content_KeyDown;
             AppConfig.FixedChanged -= AppConfig_FixedChanged;
             AppConfig.PageCountChanged -= AppConfig_PageCountChange;
@@ -63,6 +63,7 @@ namespace MTManga.UWP.ViewModels {
             void pageCount() => cfg.UpdatePageCountCommand.Execute(null);
             void repaired() => cfg.UpdateRepairedPageModeCommand.Execute(null);
             void pageMode() => cfg.UpdatePageModeCommand.Execute(null);
+            void direct() => cfg.UpdateDirectionCommand.Execute(null);
             // 左翻
             keyEventRunner.RegisterAction(VirtualKey.A, left);
             keyEventRunner.RegisterAction(VirtualKey.Left, left);
@@ -81,6 +82,9 @@ namespace MTManga.UWP.ViewModels {
             // L/R R/L
             keyEventRunner.RegisterAction(VirtualKey.G, pageMode);
             keyEventRunner.RegisterAction(VirtualKey.GamepadA, pageMode);
+            // 翻页方向
+            keyEventRunner.RegisterAction(VirtualKey.Z, direct);
+            keyEventRunner.RegisterAction(VirtualKey.GamepadRightTrigger, direct);
         }
 
         private BitmapImage _Left;

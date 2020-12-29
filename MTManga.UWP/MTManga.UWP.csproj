@@ -133,9 +133,8 @@
     <Compile Include="Controls\ImageViewer.xaml.cs">
       <DependentUpon>ImageViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\IntVisibilityConverter.cs" />
-    <Compile Include="Converters\LabelConverter.cs" />
-    <Compile Include="Converters\WidthConverter.cs" />
+    <Compile Include="Converters\DirectionIconConverter.cs" />
+    <Compile Include="Converters\PageModeLabelConverter.cs" />
     <Compile Include="AppConfig.cs" />
     <Compile Include="ServicesImp\LocalManga.cs" />
     <Compile Include="ServicesImp\LocalMangaCollection.cs" />
