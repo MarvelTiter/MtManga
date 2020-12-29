@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
@@ -23,21 +24,26 @@ namespace MTManga.UWP.ServicesImp {
         private List<MangaInfo> _infos;
         private string saveName;
         private bool disposedValue;
+        private bool isZipType => _entity.Info.FileType == ItemType.ZipManga;
+        private int maxIndex {
+            get {
+                if (isZipType) {
+                    return _zip.Entries.Count;
+                }
+                return _entity.Info.Total;
+            }
+        }
 
         public async Task<BitmapImage> ReadAsync(int index) {
             await Init();
-            if (index < 0)
+            if (index < 0 || index >= maxIndex)
                 return null;
-            if (_entity.Info.FileType == ItemType.ZipManga) {
+            if (isZipType) {
                 // StorageFile ZipArchive
-                if (index >= _zip.Entries.Count)
-                    return null;
                 var entry = _zip.Entries[index];
                 return await entry.Open().ToMemoryStream().AsRandomAccessStream().WriteBitmap();
             } else {
                 // StorageFolder
-                if (index >= _entity.Info.Total)
-                    return null;
                 var file = await _folder.GetFilesAsync(CommonFileQuery.DefaultQuery, (uint)index, 1);
                 var random = await file?[0].OpenAsync(FileAccessMode.Read);
                 return await random.WriteBitmap();
@@ -45,12 +51,8 @@ namespace MTManga.UWP.ServicesImp {
         }
 
         public async Task<bool> SaveReadingProgressAsync() {
-            _infos = await App.Helper.IO.GetLocalDataAsync<List<MangaInfo>>(saveName);
-            _infos.ForEach(i => {
-                if (i.Title == _entity.Info.Title) {
-                    i.Current = _entity.Info.Current;
-                }
-            });
+            var _currentInfo = _infos.FirstOrDefault(i => i.Title == _entity.Info.Title);
+            _currentInfo.Current = _entity.Info.Current;
             await App.Helper.IO.SetLocalDataAsync(saveName, _infos);
             return true;
         }
@@ -63,6 +65,7 @@ namespace MTManga.UWP.ServicesImp {
                 _folder = _entity.Info.FileType == ItemType.FolderManga ? _entity.StorageItem.Folder() : null;
                 _zip = _entity.Info.FileType == ItemType.ZipManga ? await createZipZrchive() : null;
                 saveName = _entity.Info.SavedName;
+                _infos = await App.Helper.IO.GetLocalDataAsync<List<MangaInfo>>(saveName);
                 flag = true;
             }
         }

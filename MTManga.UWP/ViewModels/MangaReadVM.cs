@@ -4,6 +4,8 @@ using MT.UWP.Common;
 using MTManga.Core.Entities;
 using MTManga.Core.Enums;
 using MTManga.Core.Services;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
@@ -30,9 +32,10 @@ namespace MTManga.UWP.ViewModels {
             Window.Current.Content.KeyDown -= Content_KeyDown;
             AppConfig.FixedChanged -= AppConfig_FixedChanged;
             AppConfig.PageCountChanged -= AppConfig_PageCountChange;
-            AppConfig.PageModeChanged -= AppConfig_PageModeChange;
+            AppConfig.PageModeChanged -= AppConfig_PageModeChange; 
             mangaReadingService.Dispose();
         }
+
 
         private void AppConfig_FixedChanged() {
             Read();
@@ -92,13 +95,20 @@ namespace MTManga.UWP.ViewModels {
         }
 
         private bool _ShowSetting;
-
         public bool ShowSetting {
             get { return _ShowSetting; }
             set { SetValue(ref _ShowSetting, value); }
         }
         public string CurrentName => _instance.Info.Title;
-        public int CurrentIndex => _instance.Info.Current + 1;
+        public int CurrentIndex {
+            get {
+                return _instance.Info.Current + 1;
+            }
+            set {
+                _instance.Info.Current = value - 1;
+                Read();
+            }
+        }
         public int TotalPage => _instance.Info.Total;
 
         public int PageCount => App.Helper.Setting.GetLocalSetting(ConfigEnum.PageCount, 1);
@@ -109,13 +119,27 @@ namespace MTManga.UWP.ViewModels {
         public int FixedOffset => (RepairedPageMode && PageCount > 0 ? -1 : 0);
 
         public RelayCommand LeftCommand => new RelayCommand(() => {
-            _instance.Info.Current += (PageCount + 1);
+            if (Direction == 1)
+                IndexForward();
+            else
+                IndexBack();
             Read();
         });
         public RelayCommand RightCommand => new RelayCommand(() => {
-            _instance.Info.Current -= (PageCount + 1);
+            if (Direction == 1)
+                IndexBack();
+            else
+                IndexForward();
             Read();
         });
+
+        private void IndexBack() {
+            _instance.Info.Current -= PageCount + 1;
+        }
+
+        private void IndexForward() {
+            _instance.Info.Current += PageCount + 1;
+        }
 
         public RelayCommand ShowCommand => new RelayCommand(() => {
             ShowSetting = true;
@@ -125,25 +149,41 @@ namespace MTManga.UWP.ViewModels {
             keyEventRunner[e.Key]?.Invoke();
         }
 
-        private async void Read() {
+        private int NextIndex() {
+            if (!_instance.CanMove(PageCount, FixedOffset))
+                return -1;
             var current = _instance.Info.Offset + FixedOffset + _instance.Info.Current;
-            if (!_instance.CanMove)
-                return;
-            var first = await mangaReadingService.ReadAsync(current);
-            if (PageCount == 0) {
-                Left = first;
-            } else if (PageCount == 1) {
-                var second = await mangaReadingService.ReadAsync(current + 1);
+            return current;
+        }
+
+
+        private async Task<BitmapImage[]> ImagesToShow() {
+            var next = NextIndex();
+            BitmapImage first = await mangaReadingService.ReadAsync(next);
+            BitmapImage second = null;
+            if (PageCount == 1) {
+                next = NextIndex() + 1;
+                second = await mangaReadingService.ReadAsync(next);
+            }
+            return new BitmapImage[] { first, second };
+
+        }
+
+        private async void Read() {
+            var images = await ImagesToShow();
+            if (PageCount == 0)
+                Left = images[0];
+            else {
                 if (PageMode == 1) {
-                    Right = first;
-                    Left = second;
+                    Right = images[0];
+                    Left = images[1];
                 } else {
-                    Left = first;
-                    Right = second;
+                    Left = images[0];
+                    Right = images[1];
                 }
             }
             // save current
-            _ = await mangaReadingService.SaveReadingProgressAsync();
+            await mangaReadingService.SaveReadingProgressAsync();
             RaisePropertyChanged(nameof(CurrentIndex));
         }
     }

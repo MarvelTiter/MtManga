@@ -12,7 +12,7 @@
     DataContext="{Binding Source={StaticResource Locator},Path=Manga}">
     <Page.Resources>
         <cc:IntToBooleanConverter x:Key="IBC"/>
-        <localcc:LabelConverter x:Key="LC"/>
+        <localcc:LabelConverter x:Key="LC"/>        
     </Page.Resources>
     <Grid Background="#00000000">
         <local:ImageViewer Left="{Binding Left}" 
@@ -44,6 +44,13 @@
                                   Command="{Binding Source={StaticResource Config},Path=UpdateRepairedPageModeCommand}"></AppBarButton>
                 </StackPanel>
             </mclib:AcrylicMask.TopArea>
+            <mclib:AcrylicMask.BottomArea>
+                <Slider Margin="50 20 50 20"
+                        Minimum="1"
+                        Value="{Binding CurrentIndex,Mode=TwoWay}"
+                        Maximum="{Binding TotalPage}">                    
+                </Slider>
+            </mclib:AcrylicMask.BottomArea>
         </mclib:AcrylicMask>
         <StackPanel Orientation="Horizontal"
                     Margin="0 0 5 5"

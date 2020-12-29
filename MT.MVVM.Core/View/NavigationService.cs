@@ -125,13 +125,14 @@ namespace MT.MVVM.Core.View {
                     throw new ArgumentException($"No such page: {pageKey}.");
                 }
                 var currentPage = CurrentFrame.Content as Page;
-                var b = CurrentFrame.Navigate(_pagesByKey[pageKey], parameter, transInfo);
-                if (b && currentPage?.DataContext is INavigable nav) {
+                if (currentPage?.DataContext is INavigable nav) {
                     nav.OnNavigateFrom(new NavigatedArgs {
                         Content = CurrentFrame.Content,
                         NavigationMode = NavigationMode.New
                     });
                 }
+                var b = CurrentFrame.Navigate(_pagesByKey[pageKey], parameter, transInfo);
+
                 return b;
             }
         }

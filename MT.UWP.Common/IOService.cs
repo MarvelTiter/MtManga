@@ -1,6 +1,7 @@
 ﻿using MT.UWP.Common.IServices;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
+using Windows.Storage.Streams;
 
 namespace MT.UWP.Common {
     public class IOService {
@@ -49,7 +51,8 @@ namespace MT.UWP.Common {
         public async Task<T> GetLocalDataAsync<T>(string fileName, string defaultValue = "[]") {
             try {
                 //var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appdata:///local/" + fileName));
-                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
+                var folder = ApplicationData.Current.LocalFolder;
+                var file = await folder.GetFileAsync(fileName);
                 string content = await FileIO.ReadTextAsync(file);
                 if (string.IsNullOrEmpty(content))
                     content = defaultValue;
@@ -66,19 +69,26 @@ namespace MT.UWP.Common {
                 await item.DeleteAsync();
             }
         }
-        private SemaphoreSlim asyncLock = new SemaphoreSlim(1);
+        private SemaphoreSlim asyncLock = new SemaphoreSlim(1, 1);
         public async Task SetLocalDataAsync(string fileName, object content) {
             try {
-                await asyncLock.WaitAsync();
-                var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+                var folder = ApplicationData.Current.LocalFolder;
+                var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
                 var contentString = jsonConvertService.SerializeObject(content);
-                await FileIO.WriteTextAsync(file, contentString);
+                await FileIO.WriteTextAsync(file, contentString);//  
             } catch (Exception ex) {
-                throw ex;
-            } finally {
-                asyncLock.Release();
             }
-          
+        }
+
+        public async Task<T> LockLocalFolder<T>(Func<StorageFolder, Task<T>> action) {
+            await asyncLock.WaitAsync();
+            try {
+                Debug.WriteLine($"---------LockLocalFolder--------CurrentCount:{asyncLock.CurrentCount}");
+                var folder = ApplicationData.Current.LocalFolder;
+                return await action.Invoke(folder);
+            } catch {
+                return default;
+            }
         }
 
         public async Task<StorageFolder> GetUserFolderAsync(string token = null) {

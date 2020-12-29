@@ -9,8 +9,10 @@ namespace MTManga.Core.Entities {
         public int Current {
             get { return current; }
             set {
-                if (value < 0 || value > Total - 1)
-                    return;
+                if (value < 0)
+                    value = 0;
+                if (value >= Total)
+                    value = Total - 1;
                 current = value;
             }
         }

@@ -23,7 +23,12 @@ namespace MTManga.Core.Entities {
         }
 
         public IStorageItem StorageItem { get; set; }
-        public bool CanMove => Info.Current + Info.Offset >= 0 && Info.Current < Info.Total;
+
+        public bool CanMove(int pg, int fix) {
+            var leftBound = Info.Current + Info.Offset + fix >= -1;
+            var rightBound = Info.Current + pg + fix <= Info.Total;
+            return leftBound && rightBound;
+        }
 
         public string Status {
             get {
@@ -31,6 +36,8 @@ namespace MTManga.Core.Entities {
                     return $"合集({Info.Total})";
                 if (Info.Current == 0)
                     return $"未看 / {Info.Total}";
+                if (Info.Current + 1 == Info.Total)
+                    return "已读完";
                 return $"{Info.Current + 1} / {Info.Total}";
             }
         }
