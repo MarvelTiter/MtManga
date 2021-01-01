@@ -9,7 +9,7 @@
   <Identity
     Name="5425d6fe-2b9d-4cfd-9725-1fd889f2338d"
     Publisher="CN=MarvelT"
-    Version="1.0.0.0" />
+    Version="1.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="5425d6fe-2b9d-4cfd-9725-1fd889f2338d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -32,18 +32,25 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="MTManga.UWP.App">
       <uap:VisualElements
-        DisplayName="MTManga.UWP"
+        DisplayName="本地漫画阅读器"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="MTManga.UWP"
-        BackgroundColor="transparent">
+        BackgroundColor="transparent" Description="本地漫画阅读器，支持文件夹或者zip">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileOpenPicker">
+          <uap:FileOpenPicker>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.zip</uap:FileType>
+              <uap:FileType>.jpg</uap:FileType>
+              <uap:FileType>.png</uap:FileType>
+              <uap:FileType>.jpge</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileOpenPicker>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
-
-  <Capabilities>
-    <Capability Name="internetClient" />
-  </Capabilities>
 </Package>
