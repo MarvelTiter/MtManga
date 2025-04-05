@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.35906.104 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTManga.UWP", "MTManga.UWP\MTManga.UWP.csproj", "{F836CC6B-BAD9-421E-9EDC-6FECA6E7FDCE}"
 EndProject
@@ -29,7 +29,9 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F836CC6B-BAD9-421E-9EDC-6FECA6E7FDCE}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{F836CC6B-BAD9-421E-9EDC-6FECA6E7FDCE}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{F836CC6B-BAD9-421E-9EDC-6FECA6E7FDCE}.Debug|Any CPU.Build.0 = Debug|x64
+		{F836CC6B-BAD9-421E-9EDC-6FECA6E7FDCE}.Debug|Any CPU.Deploy.0 = Debug|x64
 		{F836CC6B-BAD9-421E-9EDC-6FECA6E7FDCE}.Debug|ARM.ActiveCfg = Debug|ARM
 		{F836CC6B-BAD9-421E-9EDC-6FECA6E7FDCE}.Debug|ARM.Build.0 = Debug|ARM
 		{F836CC6B-BAD9-421E-9EDC-6FECA6E7FDCE}.Debug|ARM.Deploy.0 = Debug|ARM
